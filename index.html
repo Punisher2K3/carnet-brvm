@@ -2757,6 +2757,59 @@ document.querySelectorAll("[data-th]").forEach(b=>b.addEventListener("click",()=
 if(window.matchMedia)window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{
   if((S.reglages.theme||"auto")==="auto"){appliquerTheme();heros();vueApercu()}});
 appliquerTheme();pastilles();tout();reprendreAuto();
+  // --- Début du code pour obliger la connexion Internet ---
+
+// Fonction pour bloquer ou débloquer l'interface
+function verifierConnexion() {
+  if (navigator.onLine) {
+    // L'utilisateur est en ligne : on débloque l'interface
+    document.body.style.pointerEvents = 'auto';
+    document.body.style.opacity = '1';
+    
+    // Fermer l'avertissement s'il est affiché
+    const overlay = document.getElementById("offline-overlay");
+    if (overlay) {
+      overlay.style.display = "none";
+    }
+  } else {
+    // L'utilisateur est hors ligne : on bloque l'interface
+    document.body.style.pointerEvents = 'none';
+    document.body.style.opacity = '0.3';
+    
+    // Afficher un avertissement
+    let overlay = document.getElementById("offline-overlay");
+    if (!overlay) {
+      // Créer l'overlay s'il n'existe pas encore
+      overlay = document.createElement("div");
+      overlay.id = "offline-overlay";
+      overlay.style.position = "fixed";
+      overlay.style.top = "50%";
+      overlay.style.left = "50%";
+      overlay.style.transform = "translate(-50%, -50%)";
+      overlay.style.backgroundColor = "var(--rouge)";
+      overlay.style.color = "white";
+      overlay.style.padding = "20px";
+      overlay.style.borderRadius = "10px";
+      overlay.style.zIndex = "9999";
+      overlay.style.textAlign = "center";
+      overlay.style.boxShadow = "0 4px 6px rgba(0,0,0,0.3)";
+      overlay.style.fontWeight = "bold";
+      overlay.innerHTML = "Une connexion Internet est requise pour utiliser le carnet. L'application est en pause.";
+      
+      // S'assurer que l'avertissement reste visible (pointer-events: auto pour cet élément spécifique si besoin de le fermer plus tard, mais ici on veut tout bloquer)
+      document.body.appendChild(overlay);
+    }
+    overlay.style.display = "block";
+  }
+}
+
+// Vérifier la connexion au chargement de la page
+verifierConnexion();
+
+// Écouter les changements d'état du réseau
+window.addEventListener('offline', verifierConnexion);
+window.addEventListener('online', verifierConnexion);
+
 </script>
 </body>
 </html>
