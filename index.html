@@ -506,6 +506,18 @@ main section{animation:apparait .16s ease}
         <div class="stats" id="statsPeriode"></div>
         <p class="aide">Le <strong>gain net</strong> retire les apports et retraits : c'est ce que ton argent a produit, pas ce que tu y as versé. Le <strong>TRI</strong> pondère chaque versement par le temps qu'il a passé investi — c'est la seule mesure comparable à un taux d'intérêt.</p>
       </div>
+
+      <div class="carte">
+        <h2>Comparaison au Marché <span class="sous">BRVM Composite & BRVM 30</span></h2>
+        <div class="champs" style="max-width:800px; margin-bottom: 20px;">
+          <div><label for="iBrc1">BRVM Comp. début (<span id="lblIndD1"></span>)</label><input type="number" id="iBrc1" step="0.01" placeholder="Ex: 210.5"></div>
+          <div><label for="iBrc2">BRVM Comp. fin (<span id="lblIndD2"></span>)</label><input type="number" id="iBrc2" step="0.01" placeholder="Ex: 230.2"></div>
+          <div><label for="iBr301">BRVM 30 début</label><input type="number" id="iBr301" step="0.01" placeholder="Ex: 110.1"></div>
+          <div><label for="iBr302">BRVM 30 fin</label><input type="number" id="iBr302" step="0.01" placeholder="Ex: 115.4"></div>
+          <div style="display:flex;align-items:flex-end"><button class="bt pri" id="btSaveInd" style="width:100%">Calculer</button></div>
+        </div>
+        <div class="stats" id="resMarche"></div>
+      </div>
       <div class="carte">
         <h2>Détail par ligne</h2>
         <table>
@@ -1294,6 +1306,38 @@ function vueAnalyse(){
     <div class="fort"><span>Gain net</span><b class="${cls(gain)}">${signe(gain)}<span class="cfa">FCFA</span></b></div>
     <div><span>Rendement sur capital engagé</span><b class="${cls(gain)}">${pc(pct)}</b></div>
     <div><span>TRI sur la période</span><b class="${tp!=null?cls(tp):""}">${tp!=null?pc(tp):"—"}</b></div>`;
+  // --- COMPARAISON AU MARCHÉ ---
+  document.getElementById("lblIndD1").textContent = dateCourt(d1);
+  document.getElementById("lblIndD2").textContent = dateCourt(d2);
+
+  const getExactCours = (tick, d) => (C().cours[tick] || []).find(x => x.date === d)?.cours || "";
+  document.getElementById("iBrc1").value = getExactCours("BRVMC", d1);
+  document.getElementById("iBrc2").value = getExactCours("BRVMC", d2);
+  document.getElementById("iBr301").value = getExactCours("BRVM30", d1);
+  document.getElementById("iBr302").value = getExactCours("BRVM30", d2);
+
+  const pC1 = coursPt("BRVMC", d1), pC2 = coursPt("BRVMC", d2);
+  const p301 = coursPt("BRVM30", d1), p302 = coursPt("BRVM30", d2);
+
+  const renderIndice = (nom, pt1, pt2) => {
+    if (!pt1 || !pt2 || pt1.cours <= 0 || pt2.cours <= 0 || pt1.date >= pt2.date) {
+      return `<div><span>${nom}</span><b style="color:var(--encre3);font-size:12px">Saisis les valeurs ci-dessus</b></div>`;
+    }
+    const perf = ((pt2.cours - pt1.cours) / pt1.cours) * 100;
+    let diffHtml = "";
+    if (w != null && w.tot != null) {
+      const diff = w.tot - perf;
+      const sur = diff >= 0;
+      diffHtml = `<b class="${sur ? 'g' : 'p'}" style="margin-left:12px;font-size:14px" title="${sur ? 'Surperformance' : 'Sous-performance'}">${sur ? '+' : ''}${diff.toFixed(2)} pts</b>`;
+    }
+    return `<div><span>${nom} <span style="color:var(--encre3);font-size:11px">(${pt1.cours} → ${pt2.cours})</span></span><b class="${perf >= 0 ? 'g' : 'p'}">${pc(perf)}${diffHtml}</b></div>`;
+  };
+
+  document.getElementById("resMarche").innerHTML = `
+    <div class="fort" style="border-top:0;padding-top:0;padding-bottom:8px"><span>Performance du Portefeuille (TWR)</span><b class="${w!=null&&w.tot>=0?'g':'p'}">${w!=null?pc(w.tot):"—"}</b></div>
+    ${renderIndice("BRVM Composite", pC1, pC2)}
+    ${renderIndice("BRVM 30", p301, p302)}
+  `;
   const tb=document.getElementById("tbDetail");
   if(!l.length){tb.innerHTML='<tr><td colspan="10" class="vide">Aucune ligne.</td></tr>';document.getElementById("tfDetail").innerHTML="";return}
   tb.innerHTML=l.map(o=>`<tr>
@@ -2759,6 +2803,22 @@ document.getElementById("btRazTout").addEventListener("click",async()=>{
   document.getElementById("gMontant").value="";
   dire(ok?"Tout est effacé. La sauvegarde est dans tes téléchargements."
         :"Tout est effacé. La sauvegarde n'a pas pu être téléchargée ici.","ok")});
+document.getElementById("btSaveInd").addEventListener("click", () => {
+  const [d1, d2] = bornes();
+  const c1 = +document.getElementById("iBrc1").value;
+  const c2 = +document.getElementById("iBrc2").value;
+  const b1 = +document.getElementById("iBr301").value;
+  const b2 = +document.getElementById("iBr302").value;
+  
+  if (c1 > 0) poserCours("BRVMC", d1, c1, "saisi");
+  if (c2 > 0) poserCours("BRVMC", d2, c2, "saisi");
+  if (b1 > 0) poserCours("BRVM30", d1, b1, "saisi");
+  if (b2 > 0) poserCours("BRVM30", d2, b2, "saisi");
+  
+  sauver(); tout();
+  dire("Indices mis à jour et comparaison recalculée.", "ok");
+});
+  
 window.addEventListener("resize",heros);
 document.getElementById("ouvrirPal").addEventListener("click",ouvrirPalette);
 document.getElementById("navPlus").addEventListener("click",ouvrirPalette);
