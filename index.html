@@ -1527,7 +1527,8 @@ function parserMouvements(txt){
     if(!/^\d{2}\/\d{2}\/\d{2,4}/.test(l))continue;
     
     let rec=l,j=i,tours=0;
-    while(j+1<src.length && tours++<20 && !/^Solde/i.test(src[j+1])){
+    // MODIFICATION ICI : On s'arrête si la ligne suivante commence par une date
+    while(j+1<src.length && tours++<20 && !/^\d{2}\/\d{2}\/\d{2,4}/.test(src[j+1]) && !/^Solde/i.test(src[j+1])){
       j++; rec+=" "+src[j];
     }
     i=j;
