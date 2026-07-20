@@ -1506,34 +1506,94 @@ function nomTitre(lib,type){
   
 const code=n=>S.reglages.alias[n]||n;
 function parserMouvements(txt){
-  // 1. Nettoyage automatique des caractères invisibles de Coris Bourse
+  // 1. Nettoyage automatique des caractères invisibles et des barres verticales
   txt = txt.replace(/[\x00-\x1F\x7F-\x9F]/g, " ");
   txt = txt.normalize("NFKC");
   
-  const out=[],warn=[];let soldeFin=null,soldeFinDate=null;
-  const src = txt.split(/\r?\n/).map(l=>l.replace(/\t/g,"   ").trim());
+  const out=[], warn=[];
+  let soldeFin=null, soldeFinDate=null;
   const isCoris = /Coris\s*Bourse/i.test(txt);
   
-  for(let i=0;i<src.length;i++){
+  let src = txt.split(/\r?\n/).map(l => l.replace(/\|/g, " ").trim()).filter(l => l);
+
+  // -- PRÉ-TRAITEMENT SPÉCIAL CORIS BOURSE --
+  // Répare la première page qui est lue en colonnes (Dates, puis Libellés, puis Montants)
+  if (isCoris) {
+    let cleanSrc = [];
+    let i = 0;
+    while (i < src.length) {
+      if (/^Date Op/i.test(src[i])) {
+        i++;
+        let dates = [], libelles = [], montants = [];
+        
+        while (i < src.length && /^\d{2}\/\d{2}\/\d{2,4}$/.test(src[i])) {
+          dates.push(src[i]); i++;
+        }
+        
+        while (i < src.length && !/^Libell[ée]/i.test(src[i]) && !/^(Cr[ée]dit|D[ée]bit|Montant)/i.test(src[i])) i++;
+        if (/^Libell[ée]/i.test(src[i])) i++;
+        
+        while (i < src.length && !/^(Cr[ée]dit|D[ée]bit|Montant|Solde)/i.test(src[i])) {
+          // On ne garde que les lignes qui signalent le début d'un vrai libellé
+          if (/(Achat|Vente|D[ée]p[ôo]t|Versement|Solde ant|DDG|Frais|DIVIDENDES|Facturation)/i.test(src[i])) {
+            libelles.push(src[i]);
+          }
+          i++;
+        }
+        
+        if (/^(Cr[ée]dit|D[ée]bit|Montant)/i.test(src[i])) i++;
+        while (i < src.length && !/^Solde/i.test(src[i])) {
+          if (/^\d{1,3}(?:[\s\u00A0]\d{3})*(?:\.\d+)?$/.test(src[i])) {
+            montants.push(src[i]);
+          }
+          i++;
+        }
+        
+        // On recolle les morceaux pour former une ligne classique et digeste
+        let len = Math.min(dates.length, libelles.length);
+        for (let k = 0; k < len; k++) {
+          cleanSrc.push(`${dates[k]} ${libelles[k]} ${montants[k] || ""}`);
+        }
+      } else {
+        cleanSrc.push(src[i]);
+        i++;
+      }
+    }
+    src = cleanSrc;
+  }
+
+  // -- BOUCLE PRINCIPALE DE LECTURE --
+  for(let i=0; i<src.length; i++){
     let l=src[i]; if(!l)continue;
     
     if(/^Solde\s+Liquidit/i.test(l)){
-      const d=isoDe(l),m=l.match(RE_NOMBRE);
-      if(d&&m){if(!out.some(x=>x.type==="solde"))out.push({type:"solde",date:d,montant:nb(m[m.length-1]),libelle:"Solde liquidité SGI"});
-        else{soldeFin=nb(m[m.length-1]);soldeFinDate=d}}
+      const d=isoDe(l), m=l.match(RE_NOMBRE);
+      if(d&&m){
+        if(!out.some(x=>x.type==="solde")) out.push({type:"solde", date:d, montant:nb(m[m.length-1]), libelle:"Solde liquidité SGI"});
+        else { soldeFin=nb(m[m.length-1]); soldeFinDate=d; }
+      }
       continue;
     }
     
-    if(!/^\d{2}\/\d{2}\/\d{2,4}/.test(l))continue;
+    if(!/^\d{2}\/\d{2}\/\d{2,4}/.test(l)) continue;
     
-    let rec=l,j=i,tours=0;
-    // MODIFICATION ICI : On s'arrête si la ligne suivante commence par une date
-    while(j+1<src.length && tours++<20 && !/^\d{2}\/\d{2}\/\d{2,4}/.test(src[j+1]) && !/^Solde/i.test(src[j+1])){
-      j++; rec+=" "+src[j];
+    let rec=l, j=i, tours=0;
+    // On regroupe les lignes jusqu'à tomber sur une nouvelle opération ou le mot "Solde"
+    while(j+1 < src.length && tours++ < 15 && !/^Solde/i.test(src[j+1])) {
+      let next = src[j+1];
+      if (/^\d{2}\/\d{2}\/\d{2,4}/.test(next)) {
+        // Si la ligne suivante est une date, on vérifie si on a DÉJÀ trouvé un mot-clé d'opération.
+        // Si oui, c'est le début d'une NOUVELLE opération, on s'arrête.
+        // Si non, c'est une date de dénouement entrelacée (typique de Coris), on la regroupe.
+        if (/(Achat|Vente|D[ée]p[ôo]t|Versement|Solde ant|DDG|Frais|DIVIDENDES|Facturation)/i.test(rec)) {
+          break;
+        }
+      }
+      j++; rec += " " + src[j];
     }
     i=j;
     
-    rec = rec.replace(/\|/g," ").replace(/\s{2,}/g," ");
+    rec = rec.replace(/\s{2,}/g," ");
     const md=rec.match(/^(\d{2}\/\d{2}\/\d{2,4})/); if(!md)continue;
     const date=isoDe(md[1]); 
     
@@ -1555,20 +1615,19 @@ function parserMouvements(txt){
     const lib=reste.replace(/[\d\s\u00A0.]+$/,"").trim();
     
     if(!montants.length){
-      if(typeDe(lib))warn.push("Montant illisible le "+dateFr(date)+" (« "+lib.slice(0,50)+" »).");
+      if(typeDe(lib)) warn.push("Montant illisible le "+dateFr(date)+" (« "+lib.slice(0,50)+" »).");
       continue;
     }
     
     const m_array = montants.map(nb);
     let montant = Math.abs(m_array[m_array.length-1]);
     
-    // Coris met le solde à la fin de chaque ligne, donc l'opération est l'avant-dernier montant
     if(isCoris && m_array.length >= 2 && !/^Solde/i.test(lib)){
       montant = Math.abs(m_array[m_array.length-2]);
     }
     
     if(isCoris && /^Solde\s+ant/i.test(lib)){
-      if(!out.some(x=>x.type==="solde"))out.push({type:"solde",date,montant,libelle:"Solde antérieur"});
+      if(!out.some(x=>x.type==="solde")) out.push({type:"solde", date, montant, libelle:"Solde antérieur"});
       continue;
     }
     
@@ -1579,24 +1638,25 @@ function parserMouvements(txt){
     }
     if(!brutType){warn.push("Opération inconnue le "+dateFr(date)+" : « "+lib.slice(0,55)+" »");continue}
     
-    const t={type:brutType==="transfert-liquidites"?"depot":brutType,date,montant,libelle:lib};
+    const t={type:brutType==="transfert-liquidites"?"depot":brutType, date, montant, libelle:lib};
     if(brutType==="transfert-liquidites"){
       const L2=norm(lib);
-      if(/SORTANT|EMIS|DEBIT|VERS LE COMPTE/.test(L2))t.type="retrait";
-      else if(!/ENTRANT|RECU|CREDIT|DEPUIS/.test(L2))t.amb=true;
+      if(/SORTANT|EMIS|DEBIT|VERS LE COMPTE/.test(L2)) t.type="retrait";
+      else if(!/ENTRANT|RECU|CREDIT|DEPUIS/.test(L2)) t.amb=true;
     }
     if(t.type==="achat"||t.type==="vente"){
       if(!qte){warn.push("Quantité illisible le "+dateFr(date)+" (« "+lib.slice(0,50)+" »).");continue}
-      t.nomSGI=nomTitre(lib,t.type);t.valeur=code(t.nomSGI);t.quantite=qte;t.ordreNum=ordreNum;
+      t.nomSGI=nomTitre(lib, t.type); t.valeur=code(t.nomSGI); t.quantite=qte; t.ordreNum=ordreNum;
     }else if(t.type==="dividende"){
-      t.nomSGI=nomTitre(lib,"dividende");t.valeur=code(t.nomSGI);
+      t.nomSGI=nomTitre(lib,"dividende"); t.valeur=code(t.nomSGI);
     }
     
     out.push(t);
   }
-  resoudreAmbigus(out,soldeFin,warn);
-  return{genre:"mouvements",lignes:out,warn,soldeFin,soldeFinDate};
+  resoudreAmbigus(out, soldeFin, warn);
+  return {genre:"mouvements", lignes:out, warn, soldeFin, soldeFinDate};
 }
+  
 function resoudreAmbigus(lignes,soldeFin,warn){
   const amb=lignes.filter(x=>x.amb);
   if(!amb.length)return;
