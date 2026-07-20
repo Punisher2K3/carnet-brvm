@@ -1505,6 +1505,10 @@ function nomTitre(lib,type){
   
 const code=n=>S.reglages.alias[n]||n;
 function parserMouvements(txt){
+  // 1. Nettoyage automatique des caractères invisibles de Coris Bourse
+  txt = txt.replace(/[\x00-\x1F\x7F-\x9F]/g, " ");
+  txt = txt.normalize("NFKC");
+  
   const out=[],warn=[];let soldeFin=null,soldeFinDate=null;
   const src = txt.split(/\r?\n/).map(l=>l.replace(/\t/g,"   ").trim());
   const isCoris = /Coris\s*Bourse/i.test(txt);
@@ -1523,15 +1527,6 @@ function parserMouvements(txt){
     
     let rec=l,j=i,tours=0;
     while(j+1<src.length && tours++<20 && !/^Solde/i.test(src[j+1])){
-      const nextLine = src[j+1].replace(/\|/g,"").trim();
-      if (/^\d{2}\/\d{2}\/\d{2,4}/.test(nextLine)) {
-        const curClean = rec.replace(/\|/g," ").replace(/\d{2}\/\d{2}\/\d{2,4}/g,"")
-          .replace(/\s*\((?:Cours|COUPON)[^)]+\)/i," ")
-          .replace(/(?:Acquisition|Souscription|Cession|Rachat|Achat|Vente)\s*(?:de\s*)?\d+/i," ");
-        const hasLib = typeDe(curClean) !== null;
-        const hasAmt = (curClean.match(RE_NOMBRE) || []).length > 0;
-        if (hasLib && hasAmt) break; 
-      }
       j++; rec+=" "+src[j];
     }
     i=j;
@@ -1541,7 +1536,7 @@ function parserMouvements(txt){
     const date=isoDe(md[1]); 
     
     let reste=rec.slice(md[1].length).trim();
-    reste = reste.replace(/\d{2}\/\d{2}\/\d{2,4}/g, ""); 
+    reste = reste.replace(/^\d{2}\/\d{2}\/\d{2,4}\s*/, ""); 
     
     if(/^page\s+\d/i.test(reste)||/version\s+web/i.test(reste)||!reste.trim())continue;
     
@@ -1558,13 +1553,14 @@ function parserMouvements(txt){
     const lib=reste.replace(/[\d\s\u00A0.]+$/,"").trim();
     
     if(!montants.length){
-      if(typeDe(lib))warn.push("Montant illisible le "+dateFr(date)+" (« "+lib.slice(0,50)+" »). Saisis à la main.");
+      if(typeDe(lib))warn.push("Montant illisible le "+dateFr(date)+" (« "+lib.slice(0,50)+" »).");
       continue;
     }
     
     const m_array = montants.map(nb);
     let montant = Math.abs(m_array[m_array.length-1]);
     
+    // Coris met le solde à la fin de chaque ligne, donc l'opération est l'avant-dernier montant
     if(isCoris && m_array.length >= 2 && !/^Solde/i.test(lib)){
       montant = Math.abs(m_array[m_array.length-2]);
     }
@@ -1576,7 +1572,7 @@ function parserMouvements(txt){
     
     const brutType=typeDe(lib);
     if(brutType==="transfert-titres"){
-      warn.push("Transfert de titres le "+dateFr(date)+" (« "+lib.slice(0,50)+" ») ignoré (hors espèces).");
+      warn.push("Transfert de titres le "+dateFr(date)+" ignoré (hors espèces).");
       continue;
     }
     if(!brutType){warn.push("Opération inconnue le "+dateFr(date)+" : « "+lib.slice(0,55)+" »");continue}
@@ -1590,7 +1586,9 @@ function parserMouvements(txt){
     if(t.type==="achat"||t.type==="vente"){
       if(!qte){warn.push("Quantité illisible le "+dateFr(date)+" (« "+lib.slice(0,50)+" »).");continue}
       t.nomSGI=nomTitre(lib,t.type);t.valeur=code(t.nomSGI);t.quantite=qte;t.ordreNum=ordreNum;
-    }else if(t.type==="dividende"){t.nomSGI=nomTitre(lib,"dividende");t.valeur=code(t.nomSGI)}
+    }else if(t.type==="dividende"){
+      t.nomSGI=nomTitre(lib,"dividende");t.valeur=code(t.nomSGI);
+    }
     
     out.push(t);
   }
