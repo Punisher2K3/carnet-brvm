@@ -550,7 +550,7 @@ main section{animation:apparait .16s ease}
 
     <section id="vue-importer" hidden>
       <div class="carte">
-        <h2>Importer tes relevés SBIF</h2>
+        <h2>Importer tes relevés SGI</h2>
         <p class="chapo">Dépose <strong>tes deux relevés PDF à la fois</strong> — espèces et titre. Le carnet reconnaît chacun, les remet dans le bon ordre et les confronte : le relevé d'espèces bâtit le journal, le relevé titre y ajoute les vrais prix de marché et révèle ton courtage. Un .csv, un .txt ou un copier-coller marchent aussi.</p>
         <div class="zone" id="zone">
           <textarea id="colle" placeholder="Glisse ton relevé PDF sur cette zone — ou ouvre-le, Ctrl+A, Ctrl+C, et colle ici (Ctrl+V).
@@ -574,7 +574,7 @@ Deux tableaux compris :
       <div class="carte">
         <h2>Réconciliation <span class="sous" id="sCtrl"></span></h2>
         <div id="ctrlCorps"></div>
-        <p class="aide">Le carnet recalcule ta position à partir des seules écritures du journal, puis la confronte à la situation officielle de la SBIF. Toute divergence signale une écriture manquante — presque toujours un mouvement antérieur à la période extraite.</p>
+        <p class="aide">Le carnet recalcule ta position à partir des seules écritures du journal, puis la confronte à la situation officielle de la SGI. Toute divergence signale une écriture manquante — presque toujours un mouvement antérieur à la période extraite.</p>
       </div>
     </section>
 
@@ -589,10 +589,10 @@ Deux tableaux compris :
         </div>
         <div class="note info"><strong>Pour que ta courbe respire.</strong> Tant que le carnet ne connaît qu'un seul cours par valeur,
           la courbe reste plate entre deux mouvements d'espèces : elle ne montre que tes dépôts, pas le marché. La solution est sur le site
-          de la SBIF : dans la fenêtre Portefeuille, coche « <strong>Portefeuille à une Date</strong> », choisis une date passée, édite,
+          de la SGI : dans la fenêtre Portefeuille, coche « <strong>Portefeuille à une Date</strong> », choisis une date passée, édite,
           et colle le tableau dans l'onglet Importer. Chaque date importée ajoute un point daté à toutes tes lignes d'un coup.
           Un relevé par mois depuis avril 2025 suffit à donner une vraie forme à quinze mois d'historique.</div>
-        <p class="aide">Chaque situation SBIF importée remplit cette table automatiquement. Entre deux relevés, saisis les cours à la main depuis brvm.org ou sikafinance — ou directement dans la colonne de droite de l'aperçu.</p>
+        <p class="aide">Chaque situation SGI importée remplit cette table automatiquement. Entre deux relevés, saisis les cours à la main depuis brvm.org ou sikafinance — ou directement dans la colonne de droite de l'aperçu.</p>
       </div>
       <div class="carte">
         <h2>Historique <span class="sous" id="sCours"></span></h2>
@@ -602,14 +602,14 @@ Deux tableaux compris :
 
     <section id="vue-reglages" hidden>
       <div class="carte">
-        <h2>Correspondance des libellés SBIF <span class="sous">à vérifier</span></h2>
-        <table><thead><tr><th>Libellé de la SBIF</th><th>Code BRVM</th><th></th></tr></thead><tbody id="tbAlias"></tbody></table>
+        <h2>Correspondance des libellés SGI <span class="sous">à vérifier</span></h2>
+        <table><thead><tr><th>Libellé de la SGI</th><th>Code BRVM</th><th></th></tr></thead><tbody id="tbAlias"></tbody></table>
         <div class="rangee">
           <input id="aNom" placeholder="BANK OF AFRICA CI" style="max-width:280px">
           <input id="aCode" placeholder="BOAC" style="max-width:130px;text-transform:uppercase">
           <button class="bt fant" id="btAlias">Ajouter</button>
         </div>
-        <p class="aide">La SBIF nomme les titres en clair, la BRVM en codes. Ces correspondances sont <strong>mes propositions, pas des certitudes</strong> — recoupe-les avec ta Boussole. Modifier un code renomme aussi les écritures déjà enregistrées.</p>
+        <p class="aide">La SGI nomme les titres en clair, la BRVM en codes. Ces correspondances sont <strong>mes propositions, pas des certitudes</strong> — recoupe-les avec ta Boussole. Modifier un code renomme aussi les écritures déjà enregistrées.</p>
       </div>
       <div class="carte">
         <h2>Frais de courtage</h2>
@@ -1188,7 +1188,7 @@ function vueApercu(){
   const d=AUJ(),{l,tot}=lignes(d),[p1,p2]=bornes();
   document.getElementById("sPos").textContent=l.length?l.length+(l.length>1?" lignes":" ligne"):"";
   const el=document.getElementById("listePos");
-  if(!l.length){el.innerHTML='<p class="vide">Rien encore. Appuie sur <strong>+</strong> pour saisir un achat, ou importe ton relevé SBIF.</p>';
+  if(!l.length){el.innerHTML='<p class="vide">Rien encore. Appuie sur <strong>+</strong> pour saisir un achat, ou importe ton relevé SGI.</p>';
     document.getElementById("avisCours").innerHTML="";document.getElementById("repart").innerHTML="";return}
   const tri2=l.slice().sort((a,b)=>b.v-a.v);
   el.innerHTML=tri2.map(o=>`<div class="ligne" data-det="${esc(o.k)}" tabindex="0" role="button" aria-label="Détail ${esc(o.k)}">
@@ -1218,7 +1218,7 @@ function vueApercu(){
   const suspect=l.filter(o=>o.estime||o.src==="ordre");
   if(!C().situation){
     document.getElementById("avisCours").innerHTML=
-      `<div class="note ko"><strong>Aucune situation SBIF n'a été importée.</strong> Sans elle, le carnet n'a aucun cours de marché :
+      `<div class="note ko"><strong>Aucune situation SGI n'a été importée.</strong> Sans elle, le carnet n'a aucun cours de marché :
        chaque ligne est valorisée au prix de ton dernier ordre — frais compris, figé à la date de l'ordre. C'est ce qui creuse l'écart
        avec ta SGI. Réimporte ton relevé complet : il contient le tableau « II — Portefeuille », avec les cours du jour.
        <div class="rangee" style="margin-top:12px"><button class="bt pri" id="btVersImport">Aller à l'import</button></div></div>`;
@@ -1261,7 +1261,7 @@ function detailLigne(k){
   }else graphe=`<div class="note ko" style="font-size:12px">Un seul cours connu : impossible de tracer une courbe. Importe des « Portefeuille à une Date » pour en ajouter.</div>`;
   L.innerHTML=graphe+`<div class="stats">
     <div><span>Prix de revient unitaire</span><b>${fcfa(pru,2)}<span class="cfa">FCFA</span></b></div>
-    <div><span>Cours retenu</span><b>${fcfa(cc,2)}<span class="cfa">FCFA</span>${ci?`<em style="display:block;color:var(--encre3);font-weight:500">${dateFr(ci.date)} · ${ci.src==="sgi"?"relevé SBIF":ci.src==="saisi"?"saisi à la main":"prix d'ordre"}</em>`:""}</b></div>
+    <div><span>Cours retenu</span><b>${fcfa(cc,2)}<span class="cfa">FCFA</span>${ci?`<em style="display:block;color:var(--encre3);font-weight:500">${dateFr(ci.date)} · ${ci.src==="sgi"?"relevé SGI":ci.src==="saisi"?"saisi à la main":"prix d'ordre"}</em>`:""}</b></div>
     <div><span>Montant investi</span><b>${fcfa(p.cout)}<span class="cfa">FCFA</span></b></div>
     <div><span>Plus-value latente</span><b class="${cls(latent)}">${signe(latent)}<span class="cfa">FCFA</span><em class="${cls(latent)}" style="display:block">${pc(latent/p.cout*100)}</em></b></div>
     <div><span>Réalisé sur ventes</span><b class="${cls(p.realise)}">${p.realise?signe(p.realise):"0"}<span class="cfa">FCFA</span></b></div>
@@ -1511,49 +1511,76 @@ function parserMouvements(txt){
   
   for(let i=0;i<src.length;i++){
     let l=src[i]; if(!l)continue;
+    
     if(/^Solde\s+Liquidit/i.test(l)){
-      const d=isoDe(l),m=l.match(RE_MONTANT);
+      const d=isoDe(l),m=l.match(RE_NOMBRE);
       if(d&&m){if(!out.some(x=>x.type==="solde"))out.push({type:"solde",date:d,montant:nb(m[m.length-1]),libelle:"Solde liquidité SGI"});
         else{soldeFin=nb(m[m.length-1]);soldeFinDate=d}}
       continue;
     }
+    
     if(!/^\d{2}\/\d{2}\/\d{2,4}/.test(l))continue;
+    
     let rec=l,j=i,tours=0;
-    while(j+1<src.length && tours++<15 && !/^\d{2}\/\d{2}\/\d{2,4}/.test(src[j+1]) && !/^Solde/i.test(src[j+1])){
+    while(j+1<src.length && tours++<20 && !/^Solde/i.test(src[j+1])){
+      const nextLine = src[j+1].replace(/\|/g,"").trim();
+      if (/^\d{2}\/\d{2}\/\d{2,4}/.test(nextLine)) {
+        const curClean = rec.replace(/\|/g," ").replace(/\d{2}\/\d{2}\/\d{2,4}/g,"")
+          .replace(/\s*\((?:Cours|COUPON)[^)]+\)/i," ")
+          .replace(/(?:Acquisition|Souscription|Cession|Rachat|Achat|Vente)\s*(?:de\s*)?\d+/i," ");
+        const hasLib = typeDe(curClean) !== null;
+        const hasAmt = (curClean.match(RE_NOMBRE) || []).length > 0;
+        if (hasLib && hasAmt) break; 
+      }
       j++; rec+=" "+src[j];
     }
     i=j;
+    
     rec = rec.replace(/\|/g," ").replace(/\s{2,}/g," ");
     const md=rec.match(/^(\d{2}\/\d{2}\/\d{2,4})/); if(!md)continue;
-    const date=isoDe(md[1]); let reste=rec.slice(md[1].length).trim();
-    reste = reste.replace(/^\d{2}\/\d{2}\/\d{2,4}\s*/, "");
-    if(/\d{1,2}:\d{2}/.test(reste)||/^page\s+\d/i.test(reste)||/version\s+web/i.test(reste)||!reste)continue;
+    const date=isoDe(md[1]); 
+    
+    let reste=rec.slice(md[1].length).trim();
+    reste = reste.replace(/\d{2}\/\d{2}\/\d{2,4}/g, ""); 
+    
+    if(/^page\s+\d/i.test(reste)||/version\s+web/i.test(reste)||!reste.trim())continue;
+    
     const mq=reste.match(/(?:Acquisition|Souscription|Cession|Rachat|Achat|Vente)\s*(?:de\s*)?(\d+)/i) || reste.match(/(\d+)\s+Actions?/i);
     const mo=reste.match(/Ordre\s*N°\s*(\d+)/i);
     const qte=mq?parseInt(mq[1],10):null, ordreNum=mo?mo[1]:null;
-    let epure=reste.replace(/\d+\s+Actions?/i," ").replace(/Ordre\s*N°\s*\d+/i," ");
-    epure=epure.replace(/(?:Acquisition|Souscription|Cession|Rachat|Achat|Vente)\s*(?:de\s*)?\d+/i," ");
-    const montants=epure.match(RE_MONTANT)||[];
+    
+    let epure = reste.replace(/Ordre\s*N°\s*\d+/i," ");
+    epure = epure.replace(/(?:Acquisition|Souscription|Cession|Rachat|Achat|Vente)\s*(?:de\s*)?\d+/i," ");
+    epure = epure.replace(/\s*\((?:Cours|COUPON)[^)]+\)/i," ");
+    epure = epure.replace(/\d+\s+Actions?/i," ");
+    
+    const montants=epure.match(RE_NOMBRE)||[];
     const lib=reste.replace(/[\d\s\u00A0.]+$/,"").trim();
+    
     if(!montants.length){
-      if(typeDe(lib))warn.push("Montant illisible le "+dateFr(date)+" (« "+lib.slice(0,50)+" ») — écriture ignorée, à saisir à la main.");
+      if(typeDe(lib))warn.push("Montant illisible le "+dateFr(date)+" (« "+lib.slice(0,50)+" »). Saisis à la main.");
       continue;
     }
+    
     const m_array = montants.map(nb);
     let montant = Math.abs(m_array[m_array.length-1]);
+    
     if(isCoris && m_array.length >= 2 && !/^Solde/i.test(lib)){
       montant = Math.abs(m_array[m_array.length-2]);
     }
+    
     if(isCoris && /^Solde\s+ant/i.test(lib)){
-      if(!out.some(x=>x.type==="solde"))out.push({type:"solde",date,montant,libelle:"Solde antérieur Coris"});
+      if(!out.some(x=>x.type==="solde"))out.push({type:"solde",date,montant,libelle:"Solde antérieur"});
       continue;
     }
+    
     const brutType=typeDe(lib);
     if(brutType==="transfert-titres"){
-      warn.push("Transfert de titres le "+dateFr(date)+" (« "+lib.slice(0,50)+" ») : il déplace des titres sans toucher aux espèces, je ne peux pas l'écrire seul.");
+      warn.push("Transfert de titres le "+dateFr(date)+" (« "+lib.slice(0,50)+" ») ignoré (hors espèces).");
       continue;
     }
-    if(!brutType){warn.push("Opération inconnue le "+dateFr(date)+" : « "+lib.slice(0,55)+" » — ignorée.");continue}
+    if(!brutType){warn.push("Opération inconnue le "+dateFr(date)+" : « "+lib.slice(0,55)+" »");continue}
+    
     const t={type:brutType==="transfert-liquidites"?"depot":brutType,date,montant,libelle:lib};
     if(brutType==="transfert-liquidites"){
       const L2=norm(lib);
@@ -1564,6 +1591,7 @@ function parserMouvements(txt){
       if(!qte){warn.push("Quantité illisible le "+dateFr(date)+" (« "+lib.slice(0,50)+" »).");continue}
       t.nomSGI=nomTitre(lib,t.type);t.valeur=code(t.nomSGI);t.quantite=qte;t.ordreNum=ordreNum;
     }else if(t.type==="dividende"){t.nomSGI=nomTitre(lib,"dividende");t.valeur=code(t.nomSGI)}
+    
     out.push(t);
   }
   resoudreAmbigus(out,soldeFin,warn);
@@ -1586,7 +1614,7 @@ function resoudreAmbigus(lignes,soldeFin,warn){
   }
   if(nSol===1){
     amb.forEach((x,i)=>{x.type=(sol>>i&1)?"retrait":"depot";delete x.amb;
-      warn.push("Transfert de liquidités le "+dateFr(x.date)+" : sens déduit du solde de clôture SBIF → "+(x.type==="depot"?"ENTRÉE":"SORTIE")+" d'espèces.")});
+      warn.push("Transfert de liquidités le "+dateFr(x.date)+" : sens déduit du solde de clôture SGI → "+(x.type==="depot"?"ENTRÉE":"SORTIE")+" d'espèces.")});
   }else if(nSol===0)abandon("aucun sens ne fait retomber sur le solde de clôture — une autre ligne du relevé a probablement été mal lue, vérifie les remarques");
   else abandon("plusieurs combinaisons retombent sur le solde, impossible de trancher");
 }
@@ -1796,7 +1824,7 @@ async function souffle(u8,fmt){
   try{const s=new Blob([u8]).stream().pipeThrough(new DecompressionStream(fmt));
     return new Uint8Array(await new Response(s).arrayBuffer())}catch(e){return null}
 }
-/* Le générateur de la SBIF écrit un en-tête zlib annonçant une fenêtre de 8 Ko
+/* Le générateur de la SGI écrit un en-tête zlib annonçant une fenêtre de 8 Ko
    (CINFO=5) mais comprime avec 32 Ko. DecompressionStream croit l'en-tête et
    casse dès qu'une référence dépasse 8 Ko — donc sur les gros tableaux. On
    retire l'en-tête et on décomprime en deflate brut, qui n'en déclare aucune. */
@@ -1915,8 +1943,8 @@ function blocMvts(M){
     const s0=M.lignes.find(x=>x.type==="solde");let cum=s0?s0.montant:0;
     M.lignes.filter(x=>x.type!=="solde").forEach(x=>cum+=effet(x));
     const ec=Math.abs(Math.abs(cum)-Math.abs(M.soldeFin));
-    ctrl=ec<1?`<div class="note ok"><strong>Relevé cohérent.</strong> Le cumul des mouvements retombe sur ${fcfa(cum)} FCFA, soit le solde de clôture du ${dateFr(M.soldeFinDate)} annoncé par la SBIF. Rien ne manque.</div>`
-      :`<div class="note ko"><strong>Écart de ${fcfa(ec)} FCFA.</strong> Le cumul donne ${fcfa(cum)}, la SBIF annonce ${fcfa(M.soldeFin)} au ${dateFr(M.soldeFinDate)}. Une ligne a mal été lue — vois les avertissements avant d'intégrer.</div>`;
+    ctrl=ec<1?`<div class="note ok"><strong>Relevé cohérent.</strong> Le cumul des mouvements retombe sur ${fcfa(cum)} FCFA, soit le solde de clôture du ${dateFr(M.soldeFinDate)} annoncé par la SGI. Rien ne manque.</div>`
+      :`<div class="note ko"><strong>Écart de ${fcfa(ec)} FCFA.</strong> Le cumul donne ${fcfa(cum)}, la SGI annonce ${fcfa(M.soldeFin)} au ${dateFr(M.soldeFinDate)}. Une ligne a mal été lue — vois les avertissements avant d'intégrer.</div>`;
   }
   return{nouv,dup,html:ctrl+`<table><thead><tr><th>Date</th><th>Opération</th><th>Valeur</th><th class="num">Qté</th><th class="num">Prix unit.</th><th class="num">Espèces</th><th>État</th></tr></thead><tbody>${corps}</tbody></table>`};
 }
@@ -1957,7 +1985,7 @@ function blocSit(T){
     <td class="num">${fcfa(l.qte)}</td><td class="num">${fcfa(l.cmp,3)}</td><td class="num">${fcfa(l.cours,2)}</td><td class="num">${fcfa(l.val)}</td></tr>`;
   return `<div style="max-width:240px;margin-bottom:16px"><label for="sDate">Date de la situation</label><input type="date" id="sDate" value="${T.date||AUJ()}"></div>
     ${T.liquidite!=null?`<div class="note info">Liquidité annoncée : <strong>${fcfa(T.liquidite)} FCFA</strong>. Elle sert au contrôle, aucune écriture n'est créée.</div>`:""}
-    <table><thead><tr><th>Libellé SBIF</th><th>Valeur</th><th class="num">Qté</th><th class="num">CMP</th><th class="num">Cours</th><th class="num">Valorisation</th></tr></thead><tbody>${corps}</tbody></table>`;
+    <table><thead><tr><th>Libellé SGI</th><th>Valeur</th><th class="num">Qté</th><th class="num">CMP</th><th class="num">Cours</th><th class="num">Valorisation</th></tr></thead><tbody>${corps}</tbody></table>`;
 }
 const NOMG={mouvements:"Relevé d'espèces",double:"Relevé complet (espèces + situation)",titres:"Relevé titre",situation:"Situation du portefeuille"};
 function blocDe(r){
@@ -2028,7 +2056,7 @@ function dessinerApercu(){
 }
 function tableauNoms(noms){
   if(!noms.length)return"";
-  return `<table style="margin-bottom:18px"><thead><tr><th>Libellé SBIF</th><th>Code BRVM utilisé</th></tr></thead><tbody>
+  return `<table style="margin-bottom:18px"><thead><tr><th>Libellé SGI</th><th>Code BRVM utilisé</th></tr></thead><tbody>
     ${noms.map(n=>`<tr><td>${esc(n)}</td><td><input class="alias" data-alias="${esc(n)}" value="${esc(S.reglages.alias[n]||"")}" placeholder="${esc(n)}"></td></tr>`).join("")}</tbody></table>`;
 }
 function avertissements(w){return w&&w.length?
@@ -2118,14 +2146,14 @@ function nbEcarts(){const c=ecarts();if(!c)return 0;
   if(c.liquidite!=null&&Math.abs(c.liquidite-c.especes)>1)n++;return n}
 function vueControle(){
   const el=document.getElementById("ctrlCorps"),c=ecarts();
-  document.getElementById("sCtrl").textContent=c?"situation SBIF au "+dateFr(c.date):"";
+  document.getElementById("sCtrl").textContent=c?"situation SGI au "+dateFr(c.date):"";
   if(!c){el.innerHTML='<p class="vide">Aucune situation de référence. Importe le tableau « II — Portefeuille » de ton relevé.</p>';return}
   const ko=c.lignes.filter(l=>Math.abs(l.sgi-l.calc)>0.001);
   const dl=c.liquidite!=null?c.especes-c.liquidite:null;
   const entete=(!ko.length&&(dl==null||Math.abs(dl)<1))
-    ?'<div class="note ok"><strong>Tout concorde.</strong> Les quantités et les espèces recalculées depuis ton journal correspondent à la situation SBIF, à la ligne près.</div>'
+    ?'<div class="note ok"><strong>Tout concorde.</strong> Les quantités et les espèces recalculées depuis ton journal correspondent à la situation SGI, à la ligne près.</div>'
     :`<div class="note ko"><strong>${ko.length} ligne(s) en écart${dl!=null&&Math.abs(dl)>=1?", plus les espèces":""}.</strong> Il manque des mouvements antérieurs à la période extraite. Deux issues : extraire un relevé remontant à l'ouverture du compte (le mieux), ou générer des reprises à partir des CMP actuels (approximatif).</div>`;
-  let t=`<table><thead><tr><th>Valeur</th><th class="num">Qté SBIF</th><th class="num">Qté calculée</th><th class="num">Cours SBIF</th><th class="num">Cours utilisé</th><th>Provenance</th><th class="num">Valo. SBIF</th><th class="num">Valo. carnet</th><th class="num">Écart</th></tr></thead><tbody>`;
+  let t=`<table><thead><tr><th>Valeur</th><th class="num">Qté SGI</th><th class="num">Qté calculée</th><th class="num">Cours SGI</th><th class="num">Cours utilisé</th><th>Provenance</th><th class="num">Valo. SGI</th><th class="num">Valo. carnet</th><th class="num">Écart</th></tr></thead><tbody>`;
   let ecV=0;
   for(const l of c.lignes){
     const dq=l.calc-l.sgi,bonQ=Math.abs(dq)<0.001;
@@ -2144,30 +2172,30 @@ function vueControle(){
   let liq="";
   if(c.liquidite!=null){const bon=Math.abs(dl)<1;
     liq=`<div class="stats" style="margin-top:18px;max-width:520px">
-      <div><span>Liquidité annoncée par la SBIF</span><b>${fcfa(c.liquidite)}<span class="cfa">FCFA</span></b></div>
+      <div><span>Liquidité annoncée par la SGI</span><b>${fcfa(c.liquidite)}<span class="cfa">FCFA</span></b></div>
       <div><span>Espèces recalculées</span><b>${fcfa(c.especes)}<span class="cfa">FCFA</span></b></div>
       <div class="fort"><span>Écart</span><b class="${bon?"g":"p"}">${bon?"0":signe(dl)}<span class="cfa">FCFA</span></b></div></div>`}
   const desal=c.lignes.filter(l=>l.cours&&(l.coursUtil==null||Math.abs(l.coursUtil-l.cours)>0.005));
   let bt='<div class="rangee">';
-  if(desal.length)bt+='<button class="bt pri" id="btAligner">Aligner les '+desal.length+' cours sur la situation SBIF</button>';
+  if(desal.length)bt+='<button class="bt pri" id="btAligner">Aligner les '+desal.length+' cours sur la situation SGI</button>';
   if(ko.some(l=>l.calc<l.sgi))bt+='<button class="bt fant" id="btReprise">Générer les reprises manquantes</button>';
   bt+='</div>';
   let alerte="";
-  if(desal.length)alerte=`<div class="note ko"><strong>${desal.length} ligne(s) ne sont pas valorisées au cours de la SBIF.</strong>
+  if(desal.length)alerte=`<div class="note ko"><strong>${desal.length} ligne(s) ne sont pas valorisées au cours de la SGI.</strong>
     Le carnet utilise le prix de tes propres ordres — figé à la date de l'ordre et frais compris — au lieu du cours de marché.
-    C'est ce qui fausse ta valorisation totale. Le bouton ci-dessous recopie les cours de la situation SBIF du ${dateFr(c.date)}.</div>`;
+    C'est ce qui fausse ta valorisation totale. Le bouton ci-dessous recopie les cours de la situation SGI du ${dateFr(c.date)}.</div>`;
   el.innerHTML=entete+alerte+t+liq+bt;
   const ba=document.getElementById("btAligner");
   if(ba)ba.addEventListener("click",()=>{
     const st=C().situation;let n=0;
     st.lignes.forEach(l=>{poserCours(l.valeur,st.date,l.cours,"sgi");n++});
     sauver();tout();
-    dire(n+" cours alignés sur la situation SBIF du "+dateFr(st.date)+".","ok")});
+    dire(n+" cours alignés sur la situation SGI du "+dateFr(st.date)+".","ok")});
   const b=document.getElementById("btReprise");
   if(b)b.addEventListener("click",()=>{
     const c2=ecarts(),d0=jourPlus(premiereDate(),-1);let n=0;
     for(const l of c2.lignes){const m=l.sgi-l.calc;if(m<=0.001)continue;
-      C().transactions.push({id:uid(),ordre:Date.now()+n,type:"reprise",date:d0,valeur:l.valeur,quantite:m,cours:l.cmpSgi||l.cours,libelle:"Reprise de solde (CMP SBIF)"});n++}
+      C().transactions.push({id:uid(),ordre:Date.now()+n,type:"reprise",date:d0,valeur:l.valeur,quantite:m,cours:l.cmpSgi||l.cours,libelle:"Reprise de solde (CMP SGI)"});n++}
     sauver();tout();
     dire(n+" reprise(s) créée(s) au "+dateFr(d0)+". Attention : elles utilisent le CMP actuel, qui n'est pas ton coût d'origine.")});
 }
@@ -2206,7 +2234,7 @@ function vueRapports(){
       `<div><span>${k}</span><b class="p">−${fcfa(parCat[k])}<span class="cfa">FCFA</span><em style="display:block;color:var(--encre3)">${(parCat[k]/totFrais*100).toFixed(0)} % des frais</em></b></div>`).join("")+
       `<div class="fort"><span>Total prélevé depuis l'origine</span><b class="p">−${fcfa(totFrais)}<span class="cfa">FCFA</span></b></div></div>`+
       `<div class="note info" style="margin:16px 0 0">Sans ces frais, ton gain serait de <strong>${signe(gainBrut)} FCFA</strong> au lieu de ${signe(gainNet)}${partFrais!=null?" — ils ont prélevé <strong>"+partFrais.toFixed(1)+" %</strong> de ta performance brute":""}. Par année : ${Object.keys(anF).sort().map(a=>a+" · "+fcfa(anF[a])).join("  ·  ")}.</div>`+
-      `<p class="aide">Le <strong>courtage n'apparaît pas ici</strong> : la SBIF le fond dans le montant de chaque ordre, il est donc déjà compté dans tes prix de revient — le relevé ne permet pas de l'isoler. Ce tableau couvre les frais facturés en clair : gestion, valorisation, tenue de compte, retenues.</p>`;
+      `<p class="aide">Le <strong>courtage n'apparaît pas ici</strong> : la SGI le fond dans le montant de chaque ordre, il est donc déjà compté dans tes prix de revient — le relevé ne permet pas de l'isoler. Ce tableau couvre les frais facturés en clair : gestion, valorisation, tenue de compte, retenues.</p>`;
   }
 
   /* ---- dividendes ---- */
@@ -2270,7 +2298,7 @@ function vueRapports(){
         <div class="fort"><span>Taux effectif</span><b class="p">${(court/brutC*100).toFixed(3)} %</b></div>
       </div>
       ${nC<nOrdres?`<div class="note info" style="margin:16px 0 0">${nOrdres-nC} ordre(s) de ton journal n'ont pas encore été rapprochés du relevé titre — leur courtage reste invisible.</div>`:""}
-      <div class="note info" style="margin:16px 0 0">Ce courtage est <strong>déjà dans tes prix de revient</strong> : la SBIF le fond dans le montant de chaque ordre. Il ne s'ajoute pas aux frais ci-dessus, il était simplement invisible. Frais explicites + courtage = <strong>${fcfa(totFrais+court)} FCFA</strong> depuis l'origine.</div>`
+      <div class="note info" style="margin:16px 0 0">Ce courtage est <strong>déjà dans tes prix de revient</strong> : la SGI le fond dans le montant de chaque ordre. Il ne s'ajoute pas aux frais ci-dessus, il était simplement invisible. Frais explicites + courtage = <strong>${fcfa(totFrais+court)} FCFA</strong> depuis l'origine.</div>`
     :`<p class="vide">Importe ton <strong>relevé titre</strong> pour révéler le courtage : il donne le prix brut de chaque ordre, dont la différence avec le montant débité est exactement la commission.</p>`;
   el.innerHTML=`
     <div class="carte" style="margin-top:0"><h2>Courtage <span class="sous">le frais invisible</span></h2>${courtHtml}</div>
@@ -2644,7 +2672,7 @@ function onglet(v){
 const VUES=[["apercu","Aperçu","positions et répartition"],["analyse","Analyse","performance, TRI, TWR"],
   ["rapports","Rapports","frais, dividendes, secteurs"],["objectifs","Objectifs","cibles, rééquilibrage, projection"],
   ["transactions","Journal","toutes tes écritures"],["importer","Importer","relevés espèces et titre"],
-  ["controle","Contrôle","réconciliation avec la SBIF"],["cours","Cours","historique des prix"],
+  ["controle","Contrôle","réconciliation avec la SGI"],["cours","Cours","historique des prix"],
   ["reglages","Réglages","courtage, frais, sauvegarde"]];
 let PAL=[],PSEL=0;
 function ouvrirPalette(){
