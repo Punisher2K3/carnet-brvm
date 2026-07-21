@@ -418,6 +418,21 @@ html{scrollbar-width:thin;scrollbar-color:var(--trait) transparent}
 main section{animation:apparait .16s ease}
 @keyframes apparait{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+/* --- Positions soldées (allers-retours terminés) --- */
+.soldTable tbody tr.soldLigne{cursor:pointer;transition:background .12s}
+.soldTable tbody tr.soldLigne:hover{background:var(--fond2)}
+.soldTable tbody tr.soldLigne.ouvert{background:var(--fond2)}
+.soldTable tbody tr.soldLigne td:first-child{position:relative;padding-left:22px}
+.soldTable tbody tr.soldLigne td:first-child::before{content:"▸";position:absolute;left:8px;color:var(--encre3);transition:transform .12s;display:inline-block}
+.soldTable tbody tr.soldLigne.ouvert td:first-child::before{transform:rotate(90deg)}
+.soldBox{padding:10px 14px 12px;background:var(--fond2);border-radius:10px;margin:2px 0 6px}
+.soldTete{font-size:12px;color:var(--encre3);font-weight:600;margin-bottom:8px}
+.soldMv{display:grid;grid-template-columns:64px 96px 1fr auto;gap:10px;align-items:center;padding:4px 0;border-top:1px solid var(--trait);font-size:12.5px}
+.soldMv:first-of-type{border-top:none}
+.soldMv .ach{color:var(--vert);font-weight:650}
+.soldMv .ven{color:var(--rouge);font-weight:650}
+.soldMv .num{text-align:right;font-variant-numeric:tabular-nums}
+@media(max-width:640px){.soldMv{grid-template-columns:52px 1fr auto;gap:6px}.soldMv span:nth-child(3){display:none}}
 </style>
 </head>
 <body>
@@ -550,14 +565,15 @@ main section{animation:apparait .16s ease}
 
     <section id="vue-importer" hidden>
       <div class="carte">
-        <h2>Importer tes relevés SBIF</h2>
-        <p class="chapo">Dépose <strong>tes deux relevés PDF à la fois</strong> — espèces et titre. Le carnet reconnaît chacun, les remet dans le bon ordre et les confronte : le relevé d'espèces bâtit le journal, le relevé titre y ajoute les vrais prix de marché et révèle ton courtage. Un .csv, un .txt ou un copier-coller marchent aussi.</p>
+        <h2>Importer tes relevés SBIF ou Coris</h2>
+        <p class="chapo">Dépose tes relevés PDF — la <strong>SBIF</strong> (espèces + titre) comme <strong>Coris Bourse</strong> (relevé chronologique). Le carnet reconnaît chaque source, la remet dans le bon ordre et la confronte : chez la SBIF, le relevé d'espèces bâtit le journal et le relevé titre révèle le courtage ; chez Coris, le relevé unique porte déjà le cours de chaque ordre, donc le courtage se déduit tout seul. Un .csv, un .txt ou un copier-coller marchent aussi.</p>
         <div class="zone" id="zone">
           <textarea id="colle" placeholder="Glisse ton relevé PDF sur cette zone — ou ouvre-le, Ctrl+A, Ctrl+C, et colle ici (Ctrl+V).
 
-Deux tableaux compris :
- · ANNEXE — Détails des mouvements financiers  →  écritures du journal
- · II — Portefeuille (Titres / Quantités / CMP / Cours)  →  positions et cours du jour"></textarea>
+Formats compris :
+ · SBIF — ANNEXE (mouvements) + II Portefeuille (positions et cours)
+ · Coris — Relevé chronologique (mouvements + courtage)
+ · Coris — État de portefeuille consolidé (positions et cours du jour)"></textarea>
         </div>
         <div class="lot-f" id="lotFichiers" hidden></div>
         <div class="rangee">
@@ -574,7 +590,7 @@ Deux tableaux compris :
       <div class="carte">
         <h2>Réconciliation <span class="sous" id="sCtrl"></span></h2>
         <div id="ctrlCorps"></div>
-        <p class="aide">Le carnet recalcule ta position à partir des seules écritures du journal, puis la confronte à la situation officielle de la SBIF. Toute divergence signale une écriture manquante — presque toujours un mouvement antérieur à la période extraite.</p>
+        <p class="aide">Le carnet recalcule ta position à partir des seules écritures du journal, puis la confronte à la situation officielle de ta SGI (relevé SBIF ou état de portefeuille Coris). Toute divergence signale une écriture manquante — presque toujours un mouvement antérieur à la période extraite.</p>
       </div>
     </section>
 
@@ -587,12 +603,9 @@ Deux tableaux compris :
           <div><label for="cPrix">Cours de clôture</label><input type="number" id="cPrix" min="0" step="0.001" placeholder="0"></div>
           <div style="display:flex;align-items:flex-end"><button class="bt pri" id="btCours" style="width:100%">Enregistrer</button></div>
         </div>
-        <div class="note info"><strong>Pour que ta courbe respire.</strong> Tant que le carnet ne connaît qu'un seul cours par valeur,
-          la courbe reste plate entre deux mouvements d'espèces : elle ne montre que tes dépôts, pas le marché. La solution est sur le site
-          de la SBIF : dans la fenêtre Portefeuille, coche « <strong>Portefeuille à une Date</strong> », choisis une date passée, édite,
-          et colle le tableau dans l'onglet Importer. Chaque date importée ajoute un point daté à toutes tes lignes d'un coup.
-          Un relevé par mois depuis avril 2025 suffit à donner une vraie forme à quinze mois d'historique.</div>
-        <p class="aide">Chaque situation SBIF importée remplit cette table automatiquement. Entre deux relevés, saisis les cours à la main depuis brvm.org ou sikafinance — ou directement dans la colonne de droite de l'aperçu.</p>
+        <div class="note info"><strong>Pour que ta courbe respire.</strong> Chaque cours daté ajoute un point à la courbe. Chez Coris, le relevé chronologique en fournit déjà beaucoup : le cours de chacun de tes ordres, à sa date. Pour combler les creux, importe aussi l'« État de portefeuille consolidé » (Coris) ou le tableau « Portefeuille à une date » (SBIF), ou saisis un cours à la main ci-dessous.
+          Un relevé par mois suffit à donner une vraie forme à ton historique.</div>
+        <p class="aide">Chaque situation importée (SBIF ou Coris) remplit cette table automatiquement. Entre deux relevés, saisis les cours à la main depuis brvm.org ou sikafinance — ou directement dans la colonne de droite de l'aperçu.</p>
       </div>
       <div class="carte">
         <h2>Historique <span class="sous" id="sCours"></span></h2>
@@ -652,11 +665,15 @@ Deux tableaux compris :
       <div class="carte">
         <h2>Repartir de zéro</h2>
         <p class="chapo">Les deux comptes sont indépendants : tu peux vider le réel sans toucher à ta simulation, ou l'inverse.</p>
+        <label style="display:flex;align-items:center;gap:8px;margin:2px 0 12px;cursor:pointer;font-size:14px">
+          <input type="checkbox" id="chkSauveAvant" checked style="width:16px;height:16px;cursor:pointer">
+          <span>Télécharger une sauvegarde JSON avant d'effacer</span>
+        </label>
         <div class="rangee" style="margin-top:0">
           <button class="bt danger" id="btRaz">Vider le compte affiché</button>
           <button class="bt danger" id="btRazTout">Tout effacer</button>
         </div>
-        <p class="aide">Dans les deux cas, une sauvegarde JSON est téléchargée automatiquement avant l'effacement. Tu pourras toujours revenir en arrière par « Restaurer un export ».</p>
+        <p class="aide">Coche la case pour garder un export de secours (recommandé) — tu pourras revenir en arrière par « Restaurer un export ». Décoche-la pour effacer sans créer de fichier.</p>
       </div>
     </section>
   </main>
@@ -822,23 +839,29 @@ function sig(t){return [t.date,t.type,t.valeur||"",t.quantite||"",Math.round(eff
 
 function etatA(dateMax){
   const pos={},r={especes:0,positions:pos,frais:0,apports:0,retraits:0};
-  const P=k=>pos[k]||(pos[k]={qte:0,cout:0,realise:0,dividendes:0});
+  const P=k=>pos[k]||(pos[k]={qte:0,cout:0,realise:0,dividendes:0,
+    qteAchetee:0,qteVendue:0,coutTotal:0,produitTotal:0,
+    premierAchat:null,derniereVente:null,nbAchats:0,nbVentes:0});
   for(const t of triees()){
     if(dateMax&&t.date>dateMax)break;
     r.especes+=effet(t);
     if(t.type==="frais")r.frais+=t.montant;
     if(t.type==="depot"||t.type==="solde")r.apports+=t.montant;
     if(t.type==="retrait")r.retraits+=t.montant;
-    if(t.type==="achat"){const p=P(t.valeur);p.qte+=t.quantite;p.cout+=coutAchat(t)}
+    if(t.type==="achat"){const p=P(t.valeur);p.qte+=t.quantite;p.cout+=coutAchat(t);
+      p.qteAchetee+=t.quantite;p.coutTotal+=coutAchat(t);p.nbAchats++;
+      if(!p.premierAchat||t.date<p.premierAchat)p.premierAchat=t.date}
     else if(t.type==="reprise"){const p=P(t.valeur);p.qte+=t.quantite;p.cout+=t.quantite*t.cours;r.apports+=t.quantite*t.cours}
     else if(t.type==="fractionnement"){const p=P(t.valeur);p.qte*=t.ratio}
     else if(t.type==="vente"){const p=P(t.valeur);const pru=p.qte>0?p.cout/p.qte:0;const sorti=pru*t.quantite;
-      p.realise+=produitVente(t)-sorti;p.cout=Math.max(0,p.cout-sorti);p.qte-=t.quantite}
+      p.realise+=produitVente(t)-sorti;p.cout=Math.max(0,p.cout-sorti);p.qte-=t.quantite;
+      p.qteVendue+=t.quantite;p.produitTotal+=produitVente(t);p.nbVentes++;
+      if(!p.derniereVente||t.date>p.derniereVente)p.derniereVente=t.date}
     else if(t.type==="dividende"&&t.valeur){P(t.valeur).dividendes+=t.montant}
   }
   return r;
 }
-const PRIO={sgi:3,saisi:2,ordre:1};
+const PRIO={sgi:3,saisi:2,coris:1.5,ordre:1};
 const PETITS={DE:1,DU:1,LA:1,LE:1,DES:1,ET:1,OF:1,D:1};
 const SIGLES={CI:1,SN:1,BF:1,BJ:1,ML:1,NE:1,TG:1,SA:1,CIE:1,SIB:1,SMB:1,ETIT:1,BOA:1,SGI:1,BRVM:1,AIR:0};
 function joli(n){return String(n).split(" ").map((w,i)=>{
@@ -853,7 +876,7 @@ function nomDe(code){
     if(!_noms[c]||n.length>_noms[c].length)_noms[c]=n}}
   return _noms[code]?joli(_noms[code]):"";
 }
-const SRCLIB={sgi:"situation SGI",saisi:"saisi à la main",ordre:"prix d'un ordre"};
+const SRCLIB={sgi:"situation SGI",saisi:"saisi à la main",coris:"cours d'ordre Coris",ordre:"prix d'un ordre"};
 function coursPt(tick,date){const h=C().cours[tick];if(!h||!h.length)return null;
   let v=null;for(const p of h){if(p.date<=date)v=p;else break}return v}
 function coursA(tick,date){const p=coursPt(tick,date);return p?p.cours:null}
@@ -1182,7 +1205,7 @@ function vueApercu(){
   const d=AUJ(),{l,tot}=lignes(d),[p1,p2]=bornes();
   document.getElementById("sPos").textContent=l.length?l.length+(l.length>1?" lignes":" ligne"):"";
   const el=document.getElementById("listePos");
-  if(!l.length){el.innerHTML='<p class="vide">Rien encore. Appuie sur <strong>+</strong> pour saisir un achat, ou importe ton relevé SBIF.</p>';
+  if(!l.length){el.innerHTML='<p class="vide">Rien encore. Appuie sur <strong>+</strong> pour saisir un achat, ou importe ton relevé (SBIF ou Coris).</p>';
     document.getElementById("avisCours").innerHTML="";document.getElementById("repart").innerHTML="";return}
   const tri2=l.slice().sort((a,b)=>b.v-a.v);
   el.innerHTML=tri2.map(o=>`<div class="ligne" data-det="${esc(o.k)}" tabindex="0" role="button" aria-label="Détail ${esc(o.k)}">
@@ -1212,9 +1235,9 @@ function vueApercu(){
   const suspect=l.filter(o=>o.estime||o.src==="ordre");
   if(!C().situation){
     document.getElementById("avisCours").innerHTML=
-      `<div class="note ko"><strong>Aucune situation SBIF n'a été importée.</strong> Sans elle, le carnet n'a aucun cours de marché :
+      `<div class="note ko"><strong>Aucune situation de portefeuille n'a été importée.</strong> Sans elle, le carnet n'a aucun cours de clôture :
        chaque ligne est valorisée au prix de ton dernier ordre — frais compris, figé à la date de l'ordre. C'est ce qui creuse l'écart
-       avec ta SGI. Réimporte ton relevé complet : il contient le tableau « II — Portefeuille », avec les cours du jour.
+       avec ta SGI. Importe le tableau « Portefeuille » de ton relevé complet (SBIF) ou l'« État de portefeuille consolidé » (Coris) : il porte les cours du jour.
        <div class="rangee" style="margin-top:12px"><button class="bt pri" id="btVersImport">Aller à l'import</button></div></div>`;
     const bi=document.getElementById("btVersImport");
     if(bi)bi.addEventListener("click",()=>onglet("importer"));
@@ -1223,7 +1246,7 @@ function vueApercu(){
   document.getElementById("avisCours").innerHTML=suspect.length?
     `<div class="note ko"><strong>${suspect.length} ligne(s) mal valorisée(s) : ${suspect.map(o=>esc(o.k)).join(", ")}.</strong>
      Ces lignes n'ont aucun cours de marché : elles sont estimées au prix de tes propres ordres (frais inclus) ou à leur prix de revient.
-     Ta valorisation totale est donc fausse. Importe la situation de ta SGI, ou colle son tableau « Portefeuille Actuel » dans l'onglet Importer.</div>`:"";
+     Ta valorisation totale est donc fausse. Importe la situation de ta SGI, ou colle son tableau de portefeuille dans l'onglet Importer.</div>`:"";
 }
 function detailLigne(k){
   const d=AUJ(),e=etatA(d),p=e.positions[k];
@@ -1255,7 +1278,7 @@ function detailLigne(k){
   }else graphe=`<div class="note ko" style="font-size:12px">Un seul cours connu : impossible de tracer une courbe. Importe des « Portefeuille à une Date » pour en ajouter.</div>`;
   L.innerHTML=graphe+`<div class="stats">
     <div><span>Prix de revient unitaire</span><b>${fcfa(pru,2)}<span class="cfa">FCFA</span></b></div>
-    <div><span>Cours retenu</span><b>${fcfa(cc,2)}<span class="cfa">FCFA</span>${ci?`<em style="display:block;color:var(--encre3);font-weight:500">${dateFr(ci.date)} · ${ci.src==="sgi"?"relevé SBIF":ci.src==="saisi"?"saisi à la main":"prix d'ordre"}</em>`:""}</b></div>
+    <div><span>Cours retenu</span><b>${fcfa(cc,2)}<span class="cfa">FCFA</span>${ci?`<em style="display:block;color:var(--encre3);font-weight:500">${dateFr(ci.date)} · ${ci.src==="sgi"?"situation de portefeuille":ci.src==="saisi"?"saisi à la main":ci.src==="coris"?"cours d'ordre Coris":"prix d'ordre"}</em>`:""}</b></div>
     <div><span>Montant investi</span><b>${fcfa(p.cout)}<span class="cfa">FCFA</span></b></div>
     <div><span>Plus-value latente</span><b class="${cls(latent)}">${signe(latent)}<span class="cfa">FCFA</span><em class="${cls(latent)}" style="display:block">${pc(latent/p.cout*100)}</em></b></div>
     <div><span>Réalisé sur ventes</span><b class="${cls(p.realise)}">${p.realise?signe(p.realise):"0"}<span class="cfa">FCFA</span></b></div>
@@ -1268,7 +1291,7 @@ function detailLigne(k){
     return `<tr><td style="white-space:nowrap">${dateFr(t.date)}</td><td>${LIBS[t.type]}</td>
       <td class="num">${t.quantite?fcfa(t.quantite):t.ratio?"× "+t.ratio:"—"}</td>
       <td class="num">${t.vu!=null?fcfa(t.vu,2)+'<span style="display:block;font-size:10px;color:var(--encre3)">brut</span>':(pu!=null?fcfa(pu,2):"—")}</td>
-      <td class="num">${t.courtage!=null?'<span class="p">−'+fcfa(t.courtage)+'</span><span style="display:block;font-size:10px;color:var(--encre3)">courtage</span>':""}</td>
+      <td class="num">${t.courtage!=null?'<span class="p">−'+fcfa(t.courtage)+'</span><span style="display:block;font-size:10px;color:var(--encre3)">courtage</span>':'<span style="color:var(--trait)">—</span>'}</td>
       <td class="num ${cls(ef)}">${ef?signe(ef):"—"}</td></tr>`}).join("")}</tbody></table>`;
   document.getElementById("voile").hidden=false;
   document.getElementById("feuille").hidden=false;
@@ -1749,11 +1772,369 @@ function parserSituation(txt){
   const liquidite=(liqDisp!=null&&liqDisp!==0)?liqDisp:((liqTot!=null&&liqTot!==0)?liqTot:(liqDisp!=null?liqDisp:liqTot));
   return{genre:"situation",lignes,warn,liquidite,date};
 }
+/* ===================================================================
+   CORIS BOURSE — lecture du « Relevé chronologique détaillé des opérations »
+   -------------------------------------------------------------------
+   Le relevé Coris est un journal d'espèces pur : une ligne par opération,
+   colonnes Date | Dénouement | Libellé | Débit | Crédit | Solde. Il ne
+   contient PAS de tableau « Portefeuille » (pas de cours du jour), mais
+   chaque ordre porte son cours exact « (Cours: X) » — donc on en tire le
+   prix de marché ET le courtage, exactement comme le relevé titre SBIF.
+
+   Deux pièges que ce parseur résout :
+   1. Débit/Crédit et Solde sont collés par un simple espace, le même
+      caractère qui sépare les milliers : « 28 834 367 374 » = « 28 834 »
+      (débit) + « 367 374 » (solde). On tranche par DEUX ancres — le solde
+      courant doit vérifier solde = solde_précédent ± mouvement, et le
+      mouvement doit valoir qté × cours à quelques % près (le courtage).
+   2. Des libellés portent une année ou un semestre (« DDG 2ème Semestre
+      2025 », « Facturation ... S1 2026 ») : on ampute la partie descriptive
+      avant de lire les nombres, pour ne pas prendre « 2026 » pour un montant.
+   =================================================================== */
+
+/* Normalisation des tickers Coris vers les codes internes du carnet.
+   La quasi-totalité des tickers Coris SONT déjà les codes BRVM que l'app
+   emploie (BOABF, SNTS, ETIT…) : on ne touche qu'aux rares exceptions. */
+const NORM_CORIS = {
+  "BICB": "BICC"   // BICI-CI : Coris étiquette BICB, le carnet et la BRVM disent BICC
+  // SAFC.DS1 (droit de souscription SAFCA) est laissé tel quel : c'est une
+  // ligne temporaire distincte du titre-souche SAFC, la fondre fausserait le CMP.
+};
+function codeCoris(tk){
+  if(!tk) return tk;
+  const t = tk.toUpperCase();
+  if(NORM_CORIS[t]) return NORM_CORIS[t];
+  // Un alias utilisateur peut aussi viser ce ticker (ex. l'a renommé) : on
+  // respecte code() s'il connaît ce libellé, sinon on garde le ticker brut.
+  return S.reglages.alias[t] || t;
+}
+
+/* Un nombre Coris : « 8 481 860 » ou « 594,53 » → Number.
+   Espaces (y compris insécables) et points = séparateurs de milliers ;
+   la virgule = séparateur décimal. */
+function nbCoris(s){
+  if(s==null) return NaN;
+  return parseFloat(String(s).replace(/[\s\u00A0.]/g,"").replace(",","."));
+}
+
+/* Détection : un document Coris se reconnaît à son en-tête, à défaut à la
+   forme très régulière de ses lignes. Deux familles :
+   – le relevé chronologique des opérations (mouvements) ;
+   – l'état de portefeuille consolidé (positions + cours du jour). */
+function estReleveCoris(txt){
+  if(/Coris\s*Bourse/i.test(txt)) return true;
+  if(/RELEV[ÉE]\s+CHRONOLOGIQUE/i.test(txt)) return true;
+  if(estEtatCoris(txt)) return true;
+  const motifs = txt.match(/\d{2}\/\d{2}\/\d{2}\s+(?:\d{2}\/\d{2}\/\d{2}\s+)?(?:Achat|Vente)\s+\d+\s+[A-Za-z]/gi);
+  return !!(motifs && motifs.length >= 3);
+}
+/* L'état de portefeuille consolidé : titre explicite, ou tableau à colonnes
+   « Prix de revient / Cours / Coût de revient / Valorisation / Plus ou moins ». */
+function estEtatCoris(txt){
+  if(/[ÉE]TAT DE PORTEFEUILLE CONSOLID/i.test(txt)) return true;
+  if(/Total portefeuille (?:titres )?consolid/i.test(txt)) return true;
+  if(/Solde Tr[ée]sorerie consolid/i.test(txt)) return true;
+  return false;
+}
+/* État de portefeuille Coris → « situation » (positions valorisées aux vrais
+   cours du jour), l'équivalent du tableau Portefeuille de la SBIF.
+   Chaque ligne : TICKER Quantité PrixRevient Cours Coût Valorisation +/-Value.
+   Les espaces séparateurs de milliers rendent le découpage ambigu : on tranche
+   par les identités qté×cours=valorisation, qté×CMP=coût, valorisation−coût=+/-value. */
+function parserEtatCoris(txt){
+  const lignes=[], warn=[]; let liquidite=null, date=null, total=null;
+  for(let brut of txt.split(/\r?\n/)){
+    let l=brut.replace(/\|/g," ").replace(/\t/g,"  ").trim();
+    if(!l)continue;
+    if(!date){const m=l.match(/au\s+(\d{2}\/\d{2}\/\d{4})/i);if(m){const p=m[1].split("/");date=p[2]+"-"+p[1]+"-"+p[0];}}
+    if(/Solde Tr[ée]sorerie/i.test(l)){const m=l.match(/-?\d[\d\s.\u00A0]*(?:,\d+)?/g);if(m)liquidite=nbCoris(m[m.length-1]);continue;}
+    if(/Total portefeuille consolid[ée]\s*:/i.test(l)){const m=l.match(/-?\d[\d\s.\u00A0]*(?:,\d+)?/g);if(m)total=nbCoris(m[m.length-1]);continue;}
+    if(/Total portefeuille titres/i.test(l))continue;
+    const mt=l.match(/^([A-Z][A-Z0-9._-]{1,9})\s+(.+)$/);
+    if(!mt)continue;
+    const ticker=mt[1], reste=mt[2];
+    if(/^(Prix|Co[ûu]t|Valorisation|Plus|D[ée]signation|Cours|revient|consolid|value)/i.test(ticker))continue;
+    const toks=reste.split(/\s+/).filter(t=>/^-?[\d.,\u00A0]+$/.test(t));
+    if(toks.length<3)continue;
+    const n=toks.length;
+    /* On énumère les 5 points de coupure qui séparent les 6 colonnes et on
+       garde le découpage qui satisfait le plus d'identités arithmétiques. */
+    function* combinaisons(k,start,acc){
+      if(k===0){yield acc;return;}
+      for(let i=start;i<=n-k;i++)yield* combinaisons(k-1,i+1,[...acc,i]);
+    }
+    let best=null;
+    for(const cuts of combinaisons(5,1,[])){
+      const bornes=[0,...cuts,n], vals=[];
+      for(let i=0;i<6;i++)vals.push(nbCoris(toks.slice(bornes[i],bornes[i+1]).join(" ")));
+      const [q,cmp,cours,cout,valo,pv]=vals;
+      if(!(q>0&&cmp>0&&cours>0&&cout>0&&valo>0))continue;
+      let score=0;
+      if(Math.abs(q*cours-valo)<=Math.max(2,valo*0.01))score+=100;
+      if(Math.abs(q*cmp-cout)<=Math.max(2,cout*0.01))score+=100;
+      if(Math.abs((valo-cout)-pv)<=Math.max(2,Math.abs(pv)*0.02+2))score+=50;
+      if(score>0&&(!best||score>best.score))best={vals,score};
+    }
+    if(best){
+      const [q,cmp,cours,cout,valo,pv]=best.vals;
+      const code=codeCoris(ticker);
+      lignes.push({valeur:code,nomSGI:ticker,qte:q,cmp,cours,val:valo});
+    } else {
+      warn.push("Ligne « "+ticker+" » de l'état de portefeuille : colonnes indéchiffrables ("+reste.slice(0,60)+") — vérifie-la à la main.");
+    }
+  }
+  return {genre:"situation",lignes,warn,liquidite,date};
+}
+
+function parserCoris(txt){
+  const out = [], warn = [];
+  let soldeInit = null, soldePrec = null, soldeFin = null, soldeFinDate = null;
+
+  for(let brut of txt.split(/\r?\n/)){
+    let l = brut.replace(/\|/g," ").replace(/\t/g,"  ").trim();
+    if(!l) continue;
+
+    /* Solde antérieur : « - » (vide) ou un montant → point de départ du cumul. */
+    if(/^Solde ant[ée]rieur/i.test(l)){
+      const m = l.match(/-?\d[\d\s.\u00A0]*(?:,\d+)?/);
+      soldeInit = m ? nbCoris(m[0]) : 0; soldePrec = soldeInit;
+      out.push({type:"solde", date:null, montant:soldeInit, libelle:"Solde antérieur Coris"});
+      continue;
+    }
+    if(/^Total\b/i.test(l)) continue;
+    if(/^(Date Op|Coris Bourse|RELEV[ÉE]|CLIENT|COMPTE|AGENCE|Ouagadougou|Si[èe]ge|T[ée]l|page\s+\d|Nous vous prions|Libell[ée]|D[ée]nouement)/i.test(l)) continue;
+
+    /* Date d'opération JJ/MM/AA(AA). */
+    const md = l.match(/^(\d{2})\/(\d{2})\/(\d{2,4})\b/);
+    if(!md) continue;
+    const an = md[3].length===2 ? "20"+md[3] : md[3];
+    const date = an+"-"+md[2]+"-"+md[1];
+    let reste = l.slice(md[0].length).trim();
+
+    /* Date de dénouement optionnelle, ignorée. */
+    const mDen = reste.match(/^(\d{2})\/(\d{2})\/(\d{2,4})\b/);
+    if(mDen) reste = reste.slice(mDen[0].length).trim();
+
+    /* Type d'opération + extraction qté / ticker / cours depuis le libellé. */
+    let type=null, qte=null, valeur=null, coursLib=null, m;
+    if((m = reste.match(/^Achat\s+(\d+)\s+([A-Za-z0-9][A-Za-z0-9._-]*)\s*(?:\(\s*Cours\s*:\s*([\d\s.,\u00A0]+)\))?/i))){
+      type="achat"; qte=parseInt(m[1],10); valeur=m[2]; if(m[3])coursLib=nbCoris(m[3]);
+    } else if((m = reste.match(/^Vente\s+(\d+)\s+([A-Za-z0-9][A-Za-z0-9._-]*)\s*(?:\(\s*Cours\s*:\s*([\d\s.,\u00A0]+)\))?/i))){
+      type="vente"; qte=parseInt(m[1],10); valeur=m[2]; if(m[3])coursLib=nbCoris(m[3]);
+    } else if((m = reste.match(/^DIVIDENDES?\s+(\d+)\s+([A-Za-z0-9][A-Za-z0-9._-]*)\s*(?:\(\s*COUPON\s*:\s*([\d\s.,\u00A0]+)\))?/i))){
+      type="dividende"; qte=parseInt(m[1],10); valeur=m[2];
+    } else if(/D[ée]p[ôo]t\s+esp[èe]ces|^Versement/i.test(reste)){
+      type="depot";
+    } else if(/^Retrait/i.test(reste)){
+      type="retrait";
+    } else if(/Facturation|DDG|Frais de tenue|Tenue de Compte|Droits de garde/i.test(reste)){
+      type="frais";
+    }
+    if(!type){
+      warn.push("Opération inconnue le "+dateFr(date)+" : « "+reste.slice(0,55)+" » — ignorée. Montre-moi cette ligne et je l'apprendrai au logiciel.");
+      continue;
+    }
+
+    /* Isoler la QUEUE numérique en écartant d'abord la partie descriptive
+       (qui peut contenir une année ou un semestre). Après une parenthèse
+       « (Cours: …) » / « (COUPON: …) », tout ce qui suit est la queue ;
+       sinon on retire les libellés fixes connus qui embarquent des chiffres. */
+    let queueTxt;
+    if(reste.indexOf(")") >= 0){
+      queueTxt = reste.slice(reste.indexOf(")")+1);
+    } else {
+      queueTxt = reste
+        .replace(/^Achat\s+\d+\s+[A-Za-z0-9._-]+/i,"")
+        .replace(/^Vente\s+\d+\s+[A-Za-z0-9._-]+/i,"")
+        .replace(/^DIVIDENDES?\s+\d+\s+[A-Za-z0-9._-]+/i,"")
+        .replace(/^D[ée]p[ôo]t\s+esp[èe]ces/i,"")
+        .replace(/Versement direct au compte.*?FASO/i,"")
+        .replace(/^Versement[^\d]*/i,"")
+        .replace(/^Retrait[^\d]*/i,"")
+        .replace(/DDG\s+\d*\s*[èe]?me?\s*Semestre\s+\d{4}/i,"")
+        .replace(/DDG\s+S\d\s+\d{4}/i,"")
+        .replace(/Frais de tenue de compte\s+\d*\s*Sem\.?\s*\d{4}/i,"")
+        .replace(/Facturation des DDG\s+S\d\s+\d{4}/i,"")
+        .replace(/Facturation Frais de Tenue de Compte\s+S\d\s+\d{4}/i,"");
+    }
+
+    /* Ne garder que la suite finale de nombres. */
+    const mTail = queueTxt.match(/((?:-?\d[\d\s.\u00A0]*(?:,\d+)?)(?:\s+-?\d[\d\s.\u00A0]*(?:,\d+)?)*)\s*$/);
+    if(!mTail){
+      warn.push("Montant introuvable le "+dateFr(date)+" (« "+reste.slice(0,45)+" ») — écriture ignorée, à saisir à la main.");
+      continue;
+    }
+    const toks = mTail[1].trim().split(/\s+/).filter(Boolean);
+
+    /* Découpage [mouvement | solde]. Le sens fixe le signe attendu sur le solde. */
+    const sortie = (type==="achat" || type==="frais" || type==="retrait");
+    const signe = sortie ? -1 : +1;
+    const cible = (coursLib!=null && qte!=null) ? qte*coursLib : null;
+
+    let choix = null;
+    if(toks.length === 1){
+      const v = nbCoris(toks[0]);
+      if(cible != null){
+        /* Une seule valeur alors qu'un cours est connu : c'est presque toujours
+           le MONTANT (le solde a été omis sur cette ligne du PDF). On vérifie
+           en comparant v-comme-montant vs v-comme-solde à la cible qté×cours. */
+        const eMontant = Math.abs(v - cible) / cible;
+        const eSolde = soldePrec!=null ? Math.abs(Math.abs(v - soldePrec) - cible) / cible : 1;
+        if(eMontant < 0.15 && eMontant <= eSolde) choix = {mv:v, sd:(soldePrec!=null ? soldePrec+signe*v : v)};
+        else if(soldePrec != null) choix = {mv:Math.abs(v - soldePrec), sd:v};
+        else choix = {mv:v, sd:v};
+      } else if(soldePrec != null){
+        choix = {mv:Math.abs(v - soldePrec), sd:v};
+      } else {
+        choix = {mv:v, sd:v};
+      }
+    } else {
+      /* Plusieurs tokens : on essaie chaque point de coupure et on score par
+         cohérence du solde (contrainte forte), du cours (contrainte fine),
+         puis — à défaut d'ancre — par la bonne formation des deux nombres. */
+      const cands = [];
+      /* Un nombre FCFA bien formé : 1 à 3 chiffres, puis des groupes de 3
+         (« 100 000 », « 1 101 817 »). Sert d'arbitre quand rien d'autre ne tranche. */
+      const bienForme = grps => grps.length>0 && /^-?\d{1,3}$/.test(grps[0]) && grps.slice(1).every(g=>/^\d{3}$/.test(g));
+      for(let k=1; k<toks.length; k++){
+        const gMv = toks.slice(0,k), gSd = toks.slice(k);
+        const mv = nbCoris(gMv.join(" "));
+        const sd = nbCoris(gSd.join(" "));
+        if(!isFinite(mv) || !isFinite(sd)) continue;
+        let score = 0;
+        if(soldePrec!=null && Math.abs(soldePrec + signe*mv - sd) < 1) score += 1000;
+        if(cible!=null){ const e=Math.abs(mv-cible)/cible; if(e<0.05)score+=100; else if(e<0.15)score+=20; }
+        if(bienForme(gMv) && bienForme(gSd)){
+          score += 5;
+          /* Départage sans ancre : Débit et Solde ont des ordres de grandeur
+             comparables sur ce type de relevé. On préfère le découpage le plus
+             équilibré (même nombre de groupes de part et d'autre), ce qui écarte
+             « 100 | 000 102 352 » au profit de « 100 000 | 102 352 ». */
+          score += 2 - Math.abs(gMv.length - gSd.length);
+        }
+        if(sd > 50000000) score -= 500;                    // solde démesuré = mauvais découpage
+        if(mv > 50000000) score -= 500;                    // mouvement démesuré = collage
+        cands.push({k, mv, sd, score});
+      }
+      cands.sort((a,b)=>b.score-a.score);
+      /* On accepte le meilleur candidat s'il a une ancre (>0 par solde/cours) ou,
+         à défaut, s'il est bien formé (score 5) et non aberrant. */
+      if(cands.length && cands[0].score > 0) choix = cands[0];
+    }
+
+    /* Repli : découpage au séparateur de milliers pur (dernier nombre = solde). */
+    if(!choix){
+      const g = mTail[1].match(/-?\d{1,3}(?:[\s.\u00A0]\d{3})*(?:,\d+)?/g) || [];
+      if(g.length >= 2) choix = {mv:nbCoris(g[g.length-2]), sd:nbCoris(g[g.length-1]), incertain:true};
+      else if(g.length === 1) choix = {mv:nbCoris(g[0]), sd:nbCoris(g[0]), incertain:true};
+    }
+    if(!choix || !isFinite(choix.mv)){
+      warn.push("Montants illisibles le "+dateFr(date)+" (« "+reste.slice(0,45)+" ») — écriture ignorée, à saisir à la main.");
+      continue;
+    }
+
+    const montant = Math.abs(choix.mv);
+    const t = {type, date, montant, libelle: reste.replace(/\s+-?\d[\d\s.,\u00A0]*$/,"").trim()};
+
+    if(type==="achat" || type==="vente"){
+      if(!qte || !valeur){
+        warn.push("Quantité/valeur illisible le "+dateFr(date)+" (« "+reste.slice(0,50)+" ») — écriture ignorée, à saisir à la main.");
+        continue;
+      }
+      t.quantite = qte;
+      t.nomSGI = valeur;
+      t.valeur = codeCoris(valeur);
+      t.ordreNum = null;
+      /* Coris donne le cours net de l'ordre : on en déduit directement le
+         montant brut et le courtage, sans avoir besoin d'un second relevé. */
+      if(coursLib){
+        t.cours = coursLib;
+        t.vu = coursLib;
+        t.brut = coursLib * qte;
+        t.courtage = Math.abs(montant - t.brut);
+      } else {
+        t.cours = montant / qte;
+      }
+    } else if(type==="dividende"){
+      t.quantite = qte;
+      t.nomSGI = valeur;
+      t.valeur = codeCoris(valeur);
+    }
+
+    out.push(t);
+    if(choix.incertain)
+      warn.push("Découpage incertain le "+dateFr(date)+" (« "+t.libelle.slice(0,40)+" ») : montant "+fcfa(montant)+", solde "+fcfa(choix.sd)+" — vérifie cette ligne.");
+    soldePrec = choix.sd; soldeFin = choix.sd; soldeFinDate = date;
+  }
+
+  /* La ligne « Solde antérieur » n'a pas de date dans le PDF (« - ») : on la
+     date de la 1re opération réelle du relevé, sinon elle casse le graphique
+     (premiereDate → null) et le tri du journal. Si le solde initial est nul,
+     on la retire carrément — elle n'apporte rien. */
+  const soldeLigne = out.find(t=>t.type==="solde");
+  if(soldeLigne){
+    const premiere = out.find(t=>t.type!=="solde" && t.date);
+    if(!soldeLigne.montant){ const i=out.indexOf(soldeLigne); out.splice(i,1); }
+    else if(premiere) soldeLigne.date = premiere.date;
+  }
+
+  /* Le relevé Coris n'a pas de tableau Portefeuille : on reconstruit une
+     « situation » synthétique (positions restantes valorisées au dernier
+     cours connu de chaque titre) pour que l'onglet Analyse ait de quoi
+     travailler. C'est un pis-aller ; l'utilisateur est prévenu. */
+  const pos = {}, dernierCours = {};
+  let derniereDate = soldeFinDate || "1970-01-01";
+  for(const t of out){
+    if(t.type==="solde") continue;
+    if(t.date > derniereDate) derniereDate = t.date;
+    if(t.cours && (t.type==="achat" || t.type==="vente")) dernierCours[t.valeur] = t.cours;
+    if(t.type==="achat" || t.type==="vente"){
+      const p = pos[t.valeur] || (pos[t.valeur] = {qte:0, cout:0});
+      if(t.type==="achat"){ p.qte += t.quantite; p.cout += (t.brut!=null?t.brut:t.montant); }
+      else { const pru = p.qte>0 ? p.cout/p.qte : 0; p.qte -= t.quantite; p.cout = Math.max(0, p.cout - pru*t.quantite); }
+    }
+  }
+  const sitLignes = [];
+  for(const k in pos){
+    const p = pos[k];
+    if(p.qte > 0.0000001){
+      const cmp = p.cout / p.qte;
+      const cours = dernierCours[k] || cmp;
+      sitLignes.push({nomSGI:k, valeur:k, qte:p.qte, cmp, cours, val:p.qte*cours});
+    }
+  }
+  const sit = {
+    genre: "situation",
+    lignes: sitLignes,
+    warn: sitLignes.length
+      ? ["Le relevé Coris ne fournit aucun tableau « Portefeuille » ni cours du jour : la situation ci-dessus a été reconstituée à partir des seuls ordres, valorisée au DERNIER cours de transaction de chaque titre. Ces valeurs ne sont pas des cours de clôture de marché — mets-les à jour dans l'onglet Cours pour une valorisation fidèle."]
+      : [],
+    liquidite: soldeFin,
+    date: derniereDate
+  };
+
+  return {
+    genre: "double",
+    mvt: {genre:"mouvements", lignes:out, warn, soldeFin, soldeFinDate, src:"coris"},
+    sit
+  };
+}
+/* Nom de la SGI d'origine, pour des messages exacts selon le relevé lu. */
+function nomSGIde(o){return o&&o.src==="coris"?"Coris Bourse":"la SBIF";}
+
 function analyserTxt(txt){
+  /* Coris est reconnu à son en-tête OU à la forme de ses lignes d'ordre —
+     ainsi un simple copier-coller, sans en-tête, est identifié aussi. */
+  if (estEtatCoris(txt)) {
+    return parserEtatCoris(txt);
+  }
+  if (estReleveCoris(txt)) {
+    return parserCoris(txt);
+  }
+  
   const tit=parserTitres(txt), sit=parserSituation(txt), mvt=parserMouvements(txt);
   const nT=tit.lignes.length, nM=mvt.lignes.filter(x=>x.type!=="solde").length, nS=sit.lignes.length;
-  /* Le relevé espèces nomme ses ordres « N Actions Ordre N°… », pas le relevé titre :
-     c'est ce qui les distingue à coup sûr. */
+  
   if(nT&&nT>nM)return{genre:"titres",tit};
   if(nM&&nS)return{genre:"double",mvt,sit};
   return nM>=nS?mvt:sit;
@@ -1804,15 +2185,86 @@ function deChaine(s){let r="";
 function deHex(s){const h=s.replace(/[^0-9A-Fa-f]/g,"");let r="";
   for(let i=0;i<h.length;i+=2)r+=String.fromCharCode(parseInt((h.substr(i,2)+"0").slice(0,2),16));return r}
 const RE_TOK=/\((?:\\.|[^\\()])*\)|<[0-9A-Fa-f\s]*>|\[|\]|[-+]?[\d.]*\d[\d.]*|\/[^\s\/\[\]<>(){}]*|[A-Za-z*'"]+/g;
-function texteDuFlux(cs){
+/* ---- Polices CID / ToUnicode ----------------------------------------
+   Certains générateurs (Coris Bourse) encodent le texte en identifiants de
+   glyphes 2 octets (Type0 / Identity-H). Les octets bruts n'ont alors aucun
+   sens : il faut la table ToUnicode de la police pour retrouver les vrais
+   caractères. On indexe donc, sur le PDF entier, chaque police par son nom
+   (/F6, /F8…) et on en extrait la CMap si elle existe. Les polices simples
+   (WinAnsi, comme sur les relevés SBIF) n'ont pas de CMap : on les laisse
+   passer telles quelles, sans rien changer au chemin existant. */
+function litObjetBrut(lat,u8,num){
+  const re=new RegExp("(?:^|[^0-9])"+num+"\\s+0\\s+obj");
+  const m=re.exec(lat); if(!m)return null;
+  const start=m.index+m[0].length-(num+" 0 obj").length;
+  const objEnd=lat.indexOf("endobj",start);
+  const streamPos=lat.indexOf("stream",start);
+  if(streamPos>=0&&streamPos<objEnd){
+    const dict=lat.slice(start,streamPos);
+    let deb=streamPos+6; if(lat[deb]==="\r")deb++; if(lat[deb]==="\n")deb++;
+    return {dict,deb,fin:lat.indexOf("endstream",deb)};
+  }
+  return {dict:lat.slice(start,objEnd),deb:-1,fin:-1};
+}
+async function fluxObjet(lat,u8,num){
+  const o=litObjetBrut(lat,u8,num); if(!o||o.deb<0)return null;
+  let f2=o.fin; while(f2>o.deb&&(u8[f2-1]===10||u8[f2-1]===13))f2--;
+  const inf=await inflate(u8.subarray(o.deb,f2));
+  return inf?L1(inf):null;
+}
+/* Une CMap ToUnicode : blocs « beginbfchar » (paires code→unicode) et
+   « beginbfrange » (plages code_début..code_fin → unicode_départ). */
+function parseToUnicode(txt){
+  if(!txt)return null;
+  const map={},h=s=>parseInt(s,16);
+  const uni=x=>{let o="";for(let i=0;i<x.length;i+=4)o+=String.fromCharCode(parseInt(x.substr(i,4),16));return o};
+  let m;
+  const reC=/beginbfchar([\s\S]*?)endbfchar/g;
+  while((m=reC.exec(txt))){let mm;const r=/<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>/g;
+    while((mm=r.exec(m[1])))map[h(mm[1])]=uni(mm[2]);}
+  const reR=/beginbfrange([\s\S]*?)endbfrange/g;
+  while((m=reR.exec(txt))){let mm;const r=/<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>/g;
+    while((mm=r.exec(m[1]))){const a=h(mm[1]),b=h(mm[2]),base=parseInt(mm[3],16);
+      for(let c=a;c<=b&&c-a<65536;c++)map[c]=String.fromCharCode(base+(c-a));}}
+  return map;
+}
+/* Index { nomPolice → {cmap|null} }. cmap non nul = police CID à décoder en
+   unités de 2 octets ; cmap nul = police simple, octet par octet. */
+async function indexerPolices(lat,u8){
+  const POL={};
+  const reRes=/\/Font\s*<<([^>]*)>>/g; let m;
+  const refs={};
+  while((m=reRes.exec(lat))){let mm;const r=/\/(\w+)\s+(\d+)\s+\d+\s+R/g;
+    while((mm=r.exec(m[1])))refs[mm[1]]=mm[2];}
+  for(const nom in refs){
+    const o=litObjetBrut(lat,u8,refs[nom]); if(!o)continue;
+    const type0=/\/Subtype\s*\/Type0/.test(o.dict);
+    const tu=(o.dict.match(/\/ToUnicode\s+(\d+)\s+\d+\s+R/)||[])[1];
+    if(tu){ const cmapTxt=await fluxObjet(lat,u8,tu); POL[nom]={cmap:parseToUnicode(cmapTxt),cid:type0}; }
+    else POL[nom]={cmap:null,cid:type0};
+  }
+  return POL;
+}
+function texteDuFlux(cs,polices){
   const frags=[];let tm=[1,0,0,1,0,0],tlm=[1,0,0,1,0,0],lead=0,pile=[];
+  let police=null;   // nom de la police active (dernier /Fx … Tf)
   const mul=(a,b)=>[a[0]*b[0]+a[1]*b[2],a[0]*b[1]+a[1]*b[3],a[2]*b[0]+a[3]*b[2],a[2]*b[1]+a[3]*b[3],a[4]*b[0]+a[5]*b[2]+b[4],a[4]*b[1]+a[5]*b[3]+b[5]];
   const pose=t=>{if(t)frags.push({x:tm[4],y:tm[5],t})};
+  /* Décodage d'une chaîne selon la police active : si CMap CID, on lit
+     l'hex brut par unités de 2 octets et on traduit ; sinon octet par octet. */
+  const cmapDe=()=>polices&&police&&polices[police]?polices[police].cmap:null;
+  const decHex=hx=>{const cm=cmapDe();
+    if(cm){let s="";for(let i=0;i+4<=hx.length;i+=4){const c=parseInt(hx.substr(i,4),16);const u=cm[c];if(u!==undefined)s+=u}return s}
+    return deHex(hx)};
+  const decLit=raw=>{const cm=cmapDe();
+    if(cm){/* chaîne littérale sur police CID : chaque octet = 1 code (rare ici) */
+      const b=deChaine(raw);let s="";for(let i=0;i<b.length;i++){const u=cm[b.charCodeAt(i)];if(u!==undefined)s+=u}return s}
+    return deChaine(raw)};
   let m;RE_TOK.lastIndex=0;
   while((m=RE_TOK.exec(cs))){
     const k=m[0];
-    if(k[0]==="("){pile.push({s:deChaine(k.slice(1,-1))});continue}
-    if(k[0]==="<"){pile.push({s:deHex(k.slice(1,-1))});continue}
+    if(k[0]==="("){pile.push({s:decLit(k.slice(1,-1))});continue}
+    if(k[0]==="<"){pile.push({s:decHex(k.slice(1,-1))});continue}
     if(k==="["){pile.push({a:[]});continue}
     if(k==="]"){const a=[];while(pile.length&&!pile[pile.length-1].a)a.unshift(pile.pop());
       if(pile.length)pile.pop();pile.push({a});continue}
@@ -1822,6 +2274,7 @@ function texteDuFlux(cs){
     switch(k){
       case"BT":tm=[1,0,0,1,0,0];tlm=[1,0,0,1,0,0];break;
       case"TL":lead=n(1);break;
+      case"Tf":{const nom=pile.filter(e=>e.n).pop();if(nom)police=nom.n.slice(1);break}
       case"Td":tlm=mul([1,0,0,1,n(2),n(1)],tlm);tm=tlm.slice();break;
       case"TD":lead=-n(1);tlm=mul([1,0,0,1,n(2),n(1)],tlm);tm=tlm.slice();break;
       case"Tm":tlm=[n(6),n(5),n(4),n(3),n(2),n(1)];tm=tlm.slice();break;
@@ -1845,8 +2298,14 @@ function enLignes(frags){
     return s.trim()}).filter(Boolean);
 }
 async function pdfVersTexte(u8){
+  const lat=L1(u8);
+  /* Index des polices (avec leurs ToUnicode) construit une fois pour tout le
+     document : indispensable aux PDF à polices CID comme Coris, inoffensif
+     pour les PDF à polices simples comme SBIF (l'index reste vide de CMaps). */
+  let polices=null;
+  try{ polices=await indexerPolices(lat,u8); }catch(e){ polices=null; }
   const flux=await fluxPdf(u8),out=[];
-  for(const cs of flux){const l=enLignes(texteDuFlux(cs));if(l.length)out.push(l.join("\n"))}
+  for(const cs of flux){const l=enLignes(texteDuFlux(cs,polices));if(l.length)out.push(l.join("\n"))}
   return out.join("\n");
 }
 
@@ -1884,8 +2343,9 @@ function blocMvts(M){
     const s0=M.lignes.find(x=>x.type==="solde");let cum=s0?s0.montant:0;
     M.lignes.filter(x=>x.type!=="solde").forEach(x=>cum+=effet(x));
     const ec=Math.abs(Math.abs(cum)-Math.abs(M.soldeFin));
-    ctrl=ec<1?`<div class="note ok"><strong>Relevé cohérent.</strong> Le cumul des mouvements retombe sur ${fcfa(cum)} FCFA, soit le solde de clôture du ${dateFr(M.soldeFinDate)} annoncé par la SBIF. Rien ne manque.</div>`
-      :`<div class="note ko"><strong>Écart de ${fcfa(ec)} FCFA.</strong> Le cumul donne ${fcfa(cum)}, la SBIF annonce ${fcfa(M.soldeFin)} au ${dateFr(M.soldeFinDate)}. Une ligne a mal été lue — vois les avertissements avant d'intégrer.</div>`;
+    const sgi=nomSGIde(M);
+    ctrl=ec<1?`<div class="note ok"><strong>Relevé cohérent.</strong> Le cumul des mouvements retombe sur ${fcfa(cum)} FCFA, soit le solde de clôture du ${dateFr(M.soldeFinDate)} annoncé par ${sgi}. Rien ne manque.</div>`
+      :`<div class="note ko"><strong>Écart de ${fcfa(ec)} FCFA.</strong> Le cumul donne ${fcfa(cum)}, ${sgi} annonce ${fcfa(M.soldeFin)} au ${dateFr(M.soldeFinDate)}. Une ligne a mal été lue — vois les avertissements avant d'intégrer.</div>`;
   }
   return{nouv,dup,html:ctrl+`<table><thead><tr><th>Date</th><th>Opération</th><th>Valeur</th><th class="num">Qté</th><th class="num">Prix unit.</th><th class="num">Espèces</th><th>État</th></tr></thead><tbody>${corps}</tbody></table>`};
 }
@@ -1926,7 +2386,7 @@ function blocSit(T){
     <td class="num">${fcfa(l.qte)}</td><td class="num">${fcfa(l.cmp,3)}</td><td class="num">${fcfa(l.cours,2)}</td><td class="num">${fcfa(l.val)}</td></tr>`;
   return `<div style="max-width:240px;margin-bottom:16px"><label for="sDate">Date de la situation</label><input type="date" id="sDate" value="${T.date||AUJ()}"></div>
     ${T.liquidite!=null?`<div class="note info">Liquidité annoncée : <strong>${fcfa(T.liquidite)} FCFA</strong>. Elle sert au contrôle, aucune écriture n'est créée.</div>`:""}
-    <table><thead><tr><th>Libellé SBIF</th><th>Valeur</th><th class="num">Qté</th><th class="num">CMP</th><th class="num">Cours</th><th class="num">Valorisation</th></tr></thead><tbody>${corps}</tbody></table>`;
+    <table><thead><tr><th>Libellé</th><th>Valeur</th><th class="num">Qté</th><th class="num">CMP</th><th class="num">Cours</th><th class="num">Valorisation</th></tr></thead><tbody>${corps}</tbody></table>`;
 }
 const NOMG={mouvements:"Relevé d'espèces",double:"Relevé complet (espèces + situation)",titres:"Relevé titre",situation:"Situation du portefeuille"};
 function blocDe(r){
@@ -1966,10 +2426,14 @@ function dessinerApercu(){
       ${avertissements(IMP.tit.warn)}</div>`;
   }else if(IMP.genre==="double"){
     const M=blocMvts(IMP.mvt);
-    el.innerHTML=`<div class="note ok"><strong>Relevé complet reconnu :</strong> l'annexe des mouvements <em>et</em> la situation du portefeuille sont dans ce document. Les mouvements alimentent le journal, la situation relève les cours du jour et sert de référence au Contrôle.</div>
+    const estCoris=IMP.mvt.src==="coris";
+    const enTete=estCoris
+      ? `<div class="note ok"><strong>Relevé Coris Bourse reconnu.</strong> Ce relevé chronologique est un journal d'espèces complet : chaque ordre y porte son cours, donc le journal et le courtage se reconstituent seuls. Coris ne fournit pas de cours de clôture — la situation ci-dessous est <strong>reconstituée</strong> à partir de tes ordres, valorisée au dernier cours de transaction de chaque titre. Mets ces cours à jour dans l'onglet Cours pour une valorisation fidèle au marché.</div>`
+      : `<div class="note ok"><strong>Relevé complet reconnu :</strong> l'annexe des mouvements <em>et</em> la situation du portefeuille sont dans ce document. Les mouvements alimentent le journal, la situation relève les cours du jour et sert de référence au Contrôle.</div>`;
+    el.innerHTML=enTete+`
     <div class="carte"><h2>1 · Mouvements <span class="sous">${M.nouv} nouveau(x) · ${M.dup} doublon(s)</span></h2>${tableauNoms(noms)}${M.html}</div>
-    <div class="carte"><h2>2 · Situation du portefeuille <span class="sous">${IMP.sit.date?"au "+dateFr(IMP.sit.date):"date à confirmer"}</span></h2>${blocSit(IMP.sit)}
-      <div class="note info"><strong>Rien n'est enregistré tant que tu n'as pas cliqué ci-dessous.</strong> C'est ce bouton qui applique les cours du relevé — sans lui, tes lignes restent valorisées au prix de tes propres ordres.</div>
+    <div class="carte"><h2>2 · ${estCoris?"Situation reconstituée":"Situation du portefeuille"} <span class="sous">${IMP.sit.date?"au "+dateFr(IMP.sit.date):"date à confirmer"}</span></h2>${blocSit(IMP.sit)}
+      <div class="note info"><strong>Rien n'est enregistré tant que tu n'as pas cliqué ci-dessous.</strong> ${estCoris?"Ce bouton applique le dernier cours connu de chaque titre — pense à les rafraîchir ensuite depuis l'onglet Cours.":"C'est ce bouton qui applique les cours du relevé — sans lui, tes lignes restent valorisées au prix de tes propres ordres."}</div>
       <div class="rangee"><button class="bt pri" id="btIntegrer">Tout intégrer : ${M.nouv} écriture(s) + ${IMP.sit.lignes.length} cours</button></div>
     <p class="aide">Les doublons sont repérés en comptant les occurrences : réimporter le même relevé est sans risque, et deux exécutions identiques du même ordre le même jour sont bien comptées deux fois.</p>
     ${avertissements(warns)}</div>`;
@@ -2005,10 +2469,20 @@ function avertissements(w){return w&&w.length?
    <ul style="margin:6px 0 0;padding-left:18px">${w.map(x=>"<li>"+esc(x)+"</li>").join("")}</ul></div>`:""}
 function integrerMvts(M){
   const deja=multiset(),vus={};let n=0;
+  const coris=M.src==="coris";
   for(const t of M.lignes){
     if((t.type==="achat"||t.type==="vente")&&t.quantite){
-      const pu=t.montant/t.quantite;
-      if(!C().cours[t.valeur]||!C().cours[t.valeur].some(x=>x.date===t.date))poserCours(t.valeur,t.date,pu,"ordre");
+      /* Coris donne le vrai cours de marché de chaque ordre (« Cours: X »), net
+         de courtage : on le pose comme point daté « coris » qui alimente la
+         courbe, faute d'historique de clôture. Ailleurs (SBIF), on n'a que le
+         prix unitaire de l'ordre (courtage inclus), gardé en « ordre » et
+         écarté du graphe car trop bruité. */
+      if(coris && t.cours>0){
+        poserCours(t.valeur,t.date,t.cours,"coris");
+      } else {
+        const pu=t.montant/t.quantite;
+        if(!C().cours[t.valeur]||!C().cours[t.valeur].some(x=>x.date===t.date))poserCours(t.valeur,t.date,pu,"ordre");
+      }
     }
     const tx=Object.assign({id:uid(),ordre:Date.now()+n},t);
     const s2=sig(tx);vus[s2]=(vus[s2]||0)+1;
@@ -2087,14 +2561,14 @@ function nbEcarts(){const c=ecarts();if(!c)return 0;
   if(c.liquidite!=null&&Math.abs(c.liquidite-c.especes)>1)n++;return n}
 function vueControle(){
   const el=document.getElementById("ctrlCorps"),c=ecarts();
-  document.getElementById("sCtrl").textContent=c?"situation SBIF au "+dateFr(c.date):"";
-  if(!c){el.innerHTML='<p class="vide">Aucune situation de référence. Importe le tableau « II — Portefeuille » de ton relevé.</p>';return}
+  document.getElementById("sCtrl").textContent=c?"situation de référence au "+dateFr(c.date):"";
+  if(!c){el.innerHTML='<p class="vide">Aucune situation de référence. Importe le tableau « Portefeuille » de ton relevé (SBIF) ou l\'« État de portefeuille consolidé » (Coris).</p>';return}
   const ko=c.lignes.filter(l=>Math.abs(l.sgi-l.calc)>0.001);
   const dl=c.liquidite!=null?c.especes-c.liquidite:null;
   const entete=(!ko.length&&(dl==null||Math.abs(dl)<1))
-    ?'<div class="note ok"><strong>Tout concorde.</strong> Les quantités et les espèces recalculées depuis ton journal correspondent à la situation SBIF, à la ligne près.</div>'
+    ?'<div class="note ok"><strong>Tout concorde.</strong> Les quantités et les espèces recalculées depuis ton journal correspondent à la situation officielle, à la ligne près.</div>'
     :`<div class="note ko"><strong>${ko.length} ligne(s) en écart${dl!=null&&Math.abs(dl)>=1?", plus les espèces":""}.</strong> Il manque des mouvements antérieurs à la période extraite. Deux issues : extraire un relevé remontant à l'ouverture du compte (le mieux), ou générer des reprises à partir des CMP actuels (approximatif).</div>`;
-  let t=`<table><thead><tr><th>Valeur</th><th class="num">Qté SBIF</th><th class="num">Qté calculée</th><th class="num">Cours SBIF</th><th class="num">Cours utilisé</th><th>Provenance</th><th class="num">Valo. SBIF</th><th class="num">Valo. carnet</th><th class="num">Écart</th></tr></thead><tbody>`;
+  let t=`<table><thead><tr><th>Valeur</th><th class="num">Qté relevé</th><th class="num">Qté calculée</th><th class="num">Cours relevé</th><th class="num">Cours utilisé</th><th>Provenance</th><th class="num">Valo. relevé</th><th class="num">Valo. carnet</th><th class="num">Écart</th></tr></thead><tbody>`;
   let ecV=0;
   for(const l of c.lignes){
     const dq=l.calc-l.sgi,bonQ=Math.abs(dq)<0.001;
@@ -2113,30 +2587,30 @@ function vueControle(){
   let liq="";
   if(c.liquidite!=null){const bon=Math.abs(dl)<1;
     liq=`<div class="stats" style="margin-top:18px;max-width:520px">
-      <div><span>Liquidité annoncée par la SBIF</span><b>${fcfa(c.liquidite)}<span class="cfa">FCFA</span></b></div>
+      <div><span>Liquidité annoncée au relevé</span><b>${fcfa(c.liquidite)}<span class="cfa">FCFA</span></b></div>
       <div><span>Espèces recalculées</span><b>${fcfa(c.especes)}<span class="cfa">FCFA</span></b></div>
       <div class="fort"><span>Écart</span><b class="${bon?"g":"p"}">${bon?"0":signe(dl)}<span class="cfa">FCFA</span></b></div></div>`}
   const desal=c.lignes.filter(l=>l.cours&&(l.coursUtil==null||Math.abs(l.coursUtil-l.cours)>0.005));
   let bt='<div class="rangee">';
-  if(desal.length)bt+='<button class="bt pri" id="btAligner">Aligner les '+desal.length+' cours sur la situation SBIF</button>';
+  if(desal.length)bt+='<button class="bt pri" id="btAligner">Aligner les '+desal.length+' cours sur la situation</button>';
   if(ko.some(l=>l.calc<l.sgi))bt+='<button class="bt fant" id="btReprise">Générer les reprises manquantes</button>';
   bt+='</div>';
   let alerte="";
-  if(desal.length)alerte=`<div class="note ko"><strong>${desal.length} ligne(s) ne sont pas valorisées au cours de la SBIF.</strong>
+  if(desal.length)alerte=`<div class="note ko"><strong>${desal.length} ligne(s) ne sont pas valorisées au cours officiel.</strong>
     Le carnet utilise le prix de tes propres ordres — figé à la date de l'ordre et frais compris — au lieu du cours de marché.
-    C'est ce qui fausse ta valorisation totale. Le bouton ci-dessous recopie les cours de la situation SBIF du ${dateFr(c.date)}.</div>`;
+    C'est ce qui fausse ta valorisation totale. Le bouton ci-dessous recopie les cours de la situation du ${dateFr(c.date)}.</div>`;
   el.innerHTML=entete+alerte+t+liq+bt;
   const ba=document.getElementById("btAligner");
   if(ba)ba.addEventListener("click",()=>{
     const st=C().situation;let n=0;
     st.lignes.forEach(l=>{poserCours(l.valeur,st.date,l.cours,"sgi");n++});
     sauver();tout();
-    dire(n+" cours alignés sur la situation SBIF du "+dateFr(st.date)+".","ok")});
+    dire(n+" cours alignés sur la situation du "+dateFr(st.date)+".","ok")});
   const b=document.getElementById("btReprise");
   if(b)b.addEventListener("click",()=>{
     const c2=ecarts(),d0=jourPlus(premiereDate(),-1);let n=0;
     for(const l of c2.lignes){const m=l.sgi-l.calc;if(m<=0.001)continue;
-      C().transactions.push({id:uid(),ordre:Date.now()+n,type:"reprise",date:d0,valeur:l.valeur,quantite:m,cours:l.cmpSgi||l.cours,libelle:"Reprise de solde (CMP SBIF)"});n++}
+      C().transactions.push({id:uid(),ordre:Date.now()+n,type:"reprise",date:d0,valeur:l.valeur,quantite:m,cours:l.cmpSgi||l.cours,libelle:"Reprise de solde (CMP)"});n++}
     sauver();tout();
     dire(n+" reprise(s) créée(s) au "+dateFr(d0)+". Attention : elles utilisent le CMP actuel, qui n'est pas ton coût d'origine.")});
 }
@@ -2149,6 +2623,81 @@ const SECTEURS={BOAC:"Finance",BOAM:"Finance",BOAS:"Finance",BOAB:"Finance",BOAN
  PALC:"Agriculture",SPHC:"Agriculture",SOGC:"Agriculture",SCRC:"Agriculture",
  NTLC:"Consommation",SLBC:"Consommation",UNLC:"Consommation",
  ABJC:"Services",TTLC:"Distribution",BNBC:"Distribution",SHEC:"Distribution",CFAC:"Distribution",SVOC:"Distribution"};
+/* Analyse des positions SOLDÉES : les titres qu'on a détenus puis entièrement
+   revendus. Pour chacun, on raconte l'aller-retour complet — quantité tournée,
+   capital engagé, produit des ventes, plus-value réalisée (avec les dividendes
+   encaissés pendant la détention), durée, et rendement sur le capital investi. */
+function positionsSoldees(dateMax){
+  const e=etatA(dateMax), out=[];
+  for(const k in e.positions){
+    const p=e.positions[k];
+    /* Soldée = plus aucun titre en portefeuille, mais il y a bien eu des ventes. */
+    if(p.qte>0.0001) continue;
+    if(!p.qteVendue) continue;
+    const pv=p.realise;                 // plus-value nette réalisée sur les ventes
+    const gain=pv+p.dividendes;          // gain total = réalisé + dividendes perçus
+    /* Sans achat enregistré (ex. droits de souscription distribués), il n'y a
+       pas de capital engagé : le rendement en % n'a pas de sens, on l'omet. */
+    const sansCout=p.coutTotal<=0.0001;
+    const rdt=(!sansCout)?gain/p.coutTotal*100:null;
+    let jours=null;
+    if(p.premierAchat&&p.derniereVente){
+      jours=Math.round((new Date(p.derniereVente)-new Date(p.premierAchat))/86400000);
+    }
+    out.push({k,pv,dividendes:p.dividendes,gain,rdt,jours,sansCout,
+      qteAchetee:p.qteAchetee,qteVendue:p.qteVendue,
+      coutTotal:p.coutTotal,produitTotal:p.produitTotal,
+      nbAchats:p.nbAchats,nbVentes:p.nbVentes,
+      premierAchat:p.premierAchat,derniereVente:p.derniereVente});
+  }
+  out.sort((a,b)=>b.gain-a.gain);
+  return out;
+}
+function dureeLisible(j){
+  if(j==null)return"—";
+  if(j<1)return"le jour même";
+  if(j<31)return j+" j";
+  if(j<365){const m=Math.round(j/30.44);return m+" mois";}
+  const a=(j/365.25);return a.toFixed(a<2?1:0)+" an"+(a>=2?"s":"");
+}
+function blocSoldees(){
+  const s=positionsSoldees(AUJ());
+  if(!s.length)return'<p class="vide">Aucune position entièrement revendue pour l\'instant : tout ce que tu as acheté est encore en portefeuille.</p>';
+  let totPv=0,totDiv=0,totCout=0,gagnantes=0,perdantes=0;
+  s.forEach(o=>{totPv+=o.pv;totDiv+=o.dividendes;totCout+=o.coutTotal;if(o.gain>0)gagnantes++;else if(o.gain<0)perdantes++;});
+  const totGain=totPv+totDiv;
+  const rdtGlobal=totCout>0?totGain/totCout*100:null;
+  const rows=s.map(o=>{
+    const detail=triees().filter(t=>t.valeur===o.k&&(t.type==="achat"||t.type==="vente"))
+      .map(t=>`<div class="soldMv"><span class="${t.type==='achat'?'ach':'ven'}">${t.type==='achat'?'Achat':'Vente'}</span>
+        <span>${dateFr(t.date)}</span><span>${fcfa(t.quantite)} × ${fcfa(t.cours,2)}</span><span class="num">${fcfa(t.montant)}</span></div>`).join("");
+    return `<tr class="soldLigne" data-sold="${esc(o.k)}" tabindex="0" role="button" aria-expanded="false">
+        <td class="tick">${esc(o.k)}<span style="display:block;font-weight:400;font-size:11px;color:var(--encre3)">${esc(nomDe(o.k))}</span></td>
+        <td class="num">${fcfa(o.qteVendue)}</td>
+        <td class="num">${o.sansCout?'<span style="color:var(--encre3)">gratuit</span>':fcfa(o.coutTotal)}</td>
+        <td class="num">${fcfa(o.produitTotal)}</td>
+        <td class="num ${cls(o.pv)}">${signe(o.pv)}</td>
+        <td class="num ${o.dividendes>0?'g':''}">${o.dividendes>0?'+'+fcfa(o.dividendes):'—'}</td>
+        <td class="num ${cls(o.gain)}"><b>${signe(o.gain)}</b>${o.rdt!=null?`<span style="display:block;font-size:11px">${pc(o.rdt)}</span>`:""}</td>
+        <td>${dureeLisible(o.jours)}</td>
+      </tr>
+      <tr class="soldDetail" data-detail="${esc(o.k)}" hidden><td colspan="8"><div class="soldBox">
+        <div class="soldTete">${o.nbAchats} achat${o.nbAchats>1?"s":""} · ${o.nbVentes} vente${o.nbVentes>1?"s":""}${o.premierAchat&&o.derniereVente?` · détenu ${dureeLisible(o.jours)} (du ${dateFr(o.premierAchat)} au ${dateFr(o.derniereVente)})`:o.derniereVente?` · vendu le ${dateFr(o.derniereVente)}`:""}</div>
+        ${detail}</div></td></tr>`;
+  }).join("");
+  const synth=`<div class="stats" style="margin-bottom:16px">
+    <div><span>Positions bouclées</span><b>${s.length}<em style="display:block;color:var(--encre3);font-weight:500">${gagnantes} gagnante${gagnantes>1?"s":""} · ${perdantes} perdante${perdantes>1?"s":""}</em></b></div>
+    <div><span>Plus-value réalisée</span><b class="${cls(totPv)}">${signe(totPv)}<span class="cfa">FCFA</span></b></div>
+    ${totDiv>0?`<div><span>Dividendes encaissés</span><b class="g">+${fcfa(totDiv)}<span class="cfa">FCFA</span></b></div>`:""}
+    <div class="fort"><span>Gain total encaissé</span><b class="${cls(totGain)}">${signe(totGain)}<span class="cfa">FCFA</span>${rdtGlobal!=null?`<em style="display:block;font-size:12px">${pc(rdtGlobal)} du capital engagé</em>`:""}</b></div>
+  </div>`;
+  return synth+`<table class="soldTable"><thead><tr>
+      <th>Valeur</th><th class="num">Qté tournée</th><th class="num">Investi</th><th class="num">Encaissé</th>
+      <th class="num">± value</th><th class="num">Dividendes</th><th class="num">Gain total</th><th>Détention</th>
+    </tr></thead><tbody>${rows}</tbody></table>
+    <p class="aide">Chaque ligne est un aller-retour terminé : titres achetés puis entièrement revendus. Clique une ligne pour voir le détail des ordres. La plus-value réalisée compare le produit des ventes à ton coût de revient moyen ; le gain total y ajoute les dividendes encaissés pendant la détention.</p>`;
+}
+
 function vueRapports(){
   const el=document.getElementById("rapCorps"); if(!el)return;
   const d=AUJ(),{l,tot,e}=lignes(d),tx=triees();
@@ -2175,7 +2724,7 @@ function vueRapports(){
       `<div><span>${k}</span><b class="p">−${fcfa(parCat[k])}<span class="cfa">FCFA</span><em style="display:block;color:var(--encre3)">${(parCat[k]/totFrais*100).toFixed(0)} % des frais</em></b></div>`).join("")+
       `<div class="fort"><span>Total prélevé depuis l'origine</span><b class="p">−${fcfa(totFrais)}<span class="cfa">FCFA</span></b></div></div>`+
       `<div class="note info" style="margin:16px 0 0">Sans ces frais, ton gain serait de <strong>${signe(gainBrut)} FCFA</strong> au lieu de ${signe(gainNet)}${partFrais!=null?" — ils ont prélevé <strong>"+partFrais.toFixed(1)+" %</strong> de ta performance brute":""}. Par année : ${Object.keys(anF).sort().map(a=>a+" · "+fcfa(anF[a])).join("  ·  ")}.</div>`+
-      `<p class="aide">Le <strong>courtage n'apparaît pas ici</strong> : la SBIF le fond dans le montant de chaque ordre, il est donc déjà compté dans tes prix de revient — le relevé ne permet pas de l'isoler. Ce tableau couvre les frais facturés en clair : gestion, valorisation, tenue de compte, retenues.</p>`;
+      `<p class="aide">Le <strong>courtage n'apparaît pas ici</strong> : il est fondu dans le montant de chaque ordre, donc déjà compté dans tes prix de revient. Vois l'encart « Courtage » plus haut. Ce tableau couvre les frais facturés en clair : gestion, valorisation, tenue de compte, retenues.</p>`;
   }
 
   /* ---- dividendes ---- */
@@ -2238,19 +2787,35 @@ function vueRapports(){
         <div><span>Montant brut négocié</span><b>${fcfa(brutC)}<span class="cfa">FCFA</span></b></div>
         <div class="fort"><span>Taux effectif</span><b class="p">${(court/brutC*100).toFixed(3)} %</b></div>
       </div>
-      ${nC<nOrdres?`<div class="note info" style="margin:16px 0 0">${nOrdres-nC} ordre(s) de ton journal n'ont pas encore été rapprochés du relevé titre — leur courtage reste invisible.</div>`:""}
-      <div class="note info" style="margin:16px 0 0">Ce courtage est <strong>déjà dans tes prix de revient</strong> : la SBIF le fond dans le montant de chaque ordre. Il ne s'ajoute pas aux frais ci-dessus, il était simplement invisible. Frais explicites + courtage = <strong>${fcfa(totFrais+court)} FCFA</strong> depuis l'origine.</div>`
-    :`<p class="vide">Importe ton <strong>relevé titre</strong> pour révéler le courtage : il donne le prix brut de chaque ordre, dont la différence avec le montant débité est exactement la commission.</p>`;
+      ${nC<nOrdres?`<div class="note info" style="margin:16px 0 0">${nOrdres-nC} ordre(s) de ton journal n'ont pas encore de courtage isolé — chez la SBIF, importe le relevé titre pour les rapprocher.</div>`:""}
+      <div class="note info" style="margin:16px 0 0">Ce courtage est <strong>déjà dans tes prix de revient</strong> : il est fondu dans le montant de chaque ordre. Il ne s'ajoute pas aux frais ci-dessus, il était simplement invisible. Frais explicites + courtage = <strong>${fcfa(totFrais+court)} FCFA</strong> depuis l'origine.</div>`
+    :`<p class="vide">Le courtage se révèle par confrontation : chez la SBIF, importe le <strong>relevé titre</strong> (prix brut de chaque ordre) ; chez Coris, il est déjà déduit du relevé chronologique.</p>`;
   el.innerHTML=`
     <div class="carte" style="margin-top:0"><h2>Courtage <span class="sous">le frais invisible</span></h2>${courtHtml}</div>
     <div class="carte"><h2>Ce que coûtent les frais <span class="sous">depuis l'origine</span></h2>${fraisHtml}</div>
     <div class="carte"><h2>Revenus passifs <span class="sous">tes dividendes, année par année</span></h2>${barresDivs()}</div>
     <div class="carte"><h2>Rendement par valeur <span class="sous">${divs.length?divs.length+" valeur"+(divs.length>1?"s":""):""}</span></h2>${divHtml}</div>
+    <div class="carte"><h2>Positions bouclées <span class="sous">tes allers-retours terminés</span></h2>${blocSoldees()}</div>
     <div class="duo">
       <div class="carte" style="margin:0"><h2>Concentration</h2>${alertes}${palHtml}</div>
       <div class="carte" style="margin:0"><h2>Par secteur</h2>${secHtml}</div>
     </div>
     <div class="carte"><h2>Flux par année</h2>${fluxHtml}</div>`;
+  brancherSoldees(el);
+}
+/* Déplier / replier le détail des ordres d'une position soldée. */
+function brancherSoldees(el){
+  el.querySelectorAll("[data-sold]").forEach(r=>{
+    const bascule=()=>{
+      const d=el.querySelector(`[data-detail="${r.dataset.sold.replace(/"/g,'\\"')}"]`);
+      if(!d)return;
+      const ouvert=!d.hidden; d.hidden=ouvert;
+      r.setAttribute("aria-expanded",String(!ouvert));
+      r.classList.toggle("ouvert",!ouvert);
+    };
+    r.addEventListener("click",bascule);
+    r.addEventListener("keydown",ev=>{if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();bascule()}});
+  });
 }
 
 /* Revenus passifs, à la manière de Finary : barres en dégradé, un pas par année. */
@@ -2392,11 +2957,21 @@ function vueObjectifs(){
   g("cibActuel").addEventListener("click",()=>{const c2={};l.forEach(o=>c2[o.k]=+(o.v/tot*100).toFixed(1));C().cibles=c2;sauver();vueObjectifs()});
   g("cibEgal").addEventListener("click",()=>{const c2={},v=+(100/l.length).toFixed(1);l.forEach(o=>c2[o.k]=v);C().cibles=c2;sauver();vueObjectifs()});
   g("cibVider").addEventListener("click",()=>{C().cibles={};sauver();vueObjectifs()});
-  g("oApport").addEventListener("input",()=>{APPORT=+g("oApport").value||0;vueObjectifs();
-    const f=document.getElementById("oApport");if(f){f.focus();f.setSelectionRange(f.value.length,f.value.length)}});
-  ["oMens","oRdt","oHor"].forEach(id=>g(id).addEventListener("input",()=>{
+  /* Ces champs re-rendent la vue à chaque frappe : on mémorise la position
+     exacte du curseur avant le re-render et on la restaure après, sinon le
+     curseur saute (en début ou en fin) et rend la saisie pénible. */
+  const majAvecCurseur=(id,action)=>{
+    const f=document.getElementById(id);
+    const pos=f?f.selectionStart:null, posE=f?f.selectionEnd:null;
+    action();
+    const f2=document.getElementById(id);
+    if(f2){f2.focus();try{if(pos!=null)f2.setSelectionRange(pos,posE);}catch(e){}}
+  };
+  g("oApport").addEventListener("input",()=>majAvecCurseur("oApport",()=>{
+    APPORT=+g("oApport").value||0;vueObjectifs();}));
+  ["oMens","oRdt","oHor"].forEach(id=>g(id).addEventListener("input",()=>majAvecCurseur(id,()=>{
     MENS=+g("oMens").value||0;RDT=+g("oRdt").value||0;HORIZON=Math.max(1,+g("oHor").value||1);
-    vueObjectifs();const f=document.getElementById(id);if(f){f.focus();f.setSelectionRange(f.value.length,f.value.length)}}));
+    vueObjectifs();})));
 }
 
 /* ================= autres vues ================= */
@@ -2407,9 +2982,14 @@ function vueJournal(){
   const tous=triees().reverse();
   const sel=document.getElementById("jT");
   if(sel&&sel.options.length<2){
-    const vus=[...new Set(tous.map(t=>t.type))];
+    const presents=new Set(tous.map(t=>t.type));
+    /* On respecte l'ordre logique de OPS (Achat, Vente, Dividende…) plutôt que
+       l'ordre d'apparition dans les données, pour que « Vente » ait toujours sa
+       place à côté de « Achat ». */
+    const ordre=Object.keys(OPS).filter(t=>presents.has(t));
+    presents.forEach(t=>{if(!ordre.includes(t))ordre.push(t)});
     sel.innerHTML='<option value="">Toutes les opérations</option>'
-      +vus.map(t=>`<option value="${t}">${LIBS[t]||t}</option>`).join("");
+      +ordre.map(t=>`<option value="${t}">${LIBS[t]||t}</option>`).join("");
     sel.value=JT;
   }
   const q=norm(JQ);
@@ -2692,7 +3272,8 @@ async function texteDe(f){
     const u8=new Uint8Array(await f.arrayBuffer());
     if(typeof DecompressionStream==="undefined")throw new Error("ce navigateur ne sait pas décompresser les PDF");
     const t=await pdfVersTexte(u8);
-    if(!t.trim()||!/\d{2}\/\d{2}\/\d{4}/.test(t))
+    /* SBIF date en JJ/MM/AAAA, Coris en JJ/MM/AA : on accepte les deux. */
+    if(!t.trim()||!/\d{2}\/\d{2}\/\d{2}(\d{2})?/.test(t))
       throw new Error("texte introuvable — PDF scanné ? Ouvre-le, Ctrl+A, Ctrl+C, colle ici");
     return t;
   }
@@ -2784,25 +3365,30 @@ document.getElementById("btAutoStop").addEventListener("click",async()=>{
 function sauvegardeAvant(){
   try{exporter("carnet-avant-effacement-"+AUJ()+".json");return true}catch(e){return false}
 }
+const veutSauve=()=>{const c=document.getElementById("chkSauveAvant");return c?c.checked:true};
 document.getElementById("btRaz").addEventListener("click",async()=>{
   const q=S.actif==="reel"?"Réel":"Simulation";
   const n=C().transactions.length;
+  const avecSauve=veutSauve();
   if(!await confirmer("Vider le compte « "+q+" » ?",
-    n?"Ses "+n+" écriture(s), ses cours et sa situation de référence seront effacés. L'autre compte n'est pas touché. Une sauvegarde JSON est téléchargée avant, pour que tu puisses revenir en arrière."
-     :"Ce compte est déjà vide. Rien ne sera perdu.","Vider le compte",true))return;
-  const ok=sauvegardeAvant();
+    (n?"Ses "+n+" écriture(s), ses cours et sa situation de référence seront effacés. L'autre compte n'est pas touché. "
+     :"Ce compte est déjà vide. ")+(avecSauve?"Une sauvegarde JSON est téléchargée avant, pour que tu puisses revenir en arrière.":"⚠ Aucune sauvegarde ne sera créée : l'effacement sera définitif."),"Vider le compte",true))return;
+  const ok=avecSauve?sauvegardeAvant():null;
   S.comptes[S.actif]=compteVide();sauver();tout();
-  dire(ok?"Compte « "+q+" » vidé. La sauvegarde est dans tes téléchargements."
-        :"Compte « "+q+" » vidé. La sauvegarde n'a pas pu être téléchargée ici.","ok")});
+  dire(avecSauve?(ok?"Compte « "+q+" » vidé. La sauvegarde est dans tes téléchargements."
+        :"Compte « "+q+" » vidé. La sauvegarde n'a pas pu être téléchargée ici.")
+        :"Compte « "+q+" » vidé.","ok")});
 document.getElementById("btRazTout").addEventListener("click",async()=>{
+  const avecSauve=veutSauve();
   if(!await confirmer("Tout effacer ?",
-    "Les deux comptes, tous tes cours, tes correspondances et tes réglages disparaissent. Une sauvegarde JSON est téléchargée avant.","Tout effacer",true))return;
-  const ok=sauvegardeAvant();
+    "Les deux comptes, tous tes cours, tes correspondances et tes réglages disparaissent. "+(avecSauve?"Une sauvegarde JSON est téléchargée avant.":"⚠ Aucune sauvegarde ne sera créée : l'effacement sera définitif."),"Tout effacer",true))return;
+  const ok=avecSauve?sauvegardeAvant():null;
   S=etatVide();sauver();tout();
   document.getElementById("rTaux").value="";document.getElementById("rMin").value="";
   document.getElementById("gMontant").value="";
-  dire(ok?"Tout est effacé. La sauvegarde est dans tes téléchargements."
-        :"Tout est effacé. La sauvegarde n'a pas pu être téléchargée ici.","ok")});
+  dire(avecSauve?(ok?"Tout est effacé. La sauvegarde est dans tes téléchargements."
+        :"Tout est effacé. La sauvegarde n'a pas pu être téléchargée ici.")
+        :"Tout est effacé.","ok")});
 document.getElementById("btSaveInd").addEventListener("click", () => {
   const [d1, d2] = bornes();
   const c1 = +document.getElementById("iBrc1").value;
