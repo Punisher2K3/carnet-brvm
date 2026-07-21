@@ -164,6 +164,41 @@ body{background:var(--fond);color:var(--encre);font-family:var(--sans);font-size
 @keyframes pop{from{transform:translate(-50%,-50%) scale(.96);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
 
 /* ---------- cartes ---------- */
+/* ---------- pédagogie : lexique et explications ---------- */
+.lex{border-bottom:1px dotted var(--marque);cursor:help;color:inherit;font-weight:inherit}
+.lex:hover,.lex:focus{background:var(--carte2);border-radius:3px;outline:none}
+.expl{margin:2px 0 16px;border:1px solid var(--trait);border-radius:var(--r2);background:var(--carte2);overflow:hidden}
+.expl>summary{cursor:pointer;list-style:none;padding:10px 14px;font-size:12.5px;font-weight:650;
+  color:var(--encre2);display:flex;align-items:center;gap:8px;user-select:none}
+.expl>summary::-webkit-details-marker{display:none}
+.expl>summary::before{content:"?";display:inline-flex;align-items:center;justify-content:center;
+  width:17px;height:17px;border-radius:50%;background:var(--marque);color:#fff;font-size:11px;font-weight:800;flex:none}
+.expl>summary::after{content:"›";margin-left:auto;color:var(--trait);font-size:17px;transform:rotate(90deg);transition:transform .18s ease}
+.expl[open]>summary::after{transform:rotate(-90deg)}
+.expl>summary:hover{color:var(--encre)}
+.expl-c{padding:2px 14px 12px;font-size:13px;line-height:1.68;color:var(--encre2)}
+.expl-c p{margin:0 0 9px}
+.expl-c p:last-child{margin-bottom:0}
+.expl-c b{color:var(--encre);font-weight:650}
+#lexBoite{width:min(460px,calc(100% - 28px))}
+#lexBoite h3{font-size:19px;line-height:1.3;margin-bottom:12px}
+#lexBoite p{font-size:14px;line-height:1.72;color:var(--encre);margin-bottom:20px}
+.lexliste{display:grid;gap:14px}
+.lexliste>div{border-left:2px solid var(--trait2);padding-left:13px}
+.lexliste b{display:block;font-size:13.5px;font-weight:650;margin-bottom:3px}
+.lexliste span{font-size:12.5px;line-height:1.62;color:var(--encre2)}
+.sgi-choix{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:16px 0 4px}
+.sgi-bt{text-align:left;background:var(--carte2);border:1px solid var(--trait);border-radius:var(--r2);
+  padding:15px 16px;cursor:pointer;font:inherit;color:var(--encre);transition:border-color .15s ease,transform .1s ease}
+.sgi-bt:hover{border-color:var(--marque);transform:translateY(-1px)}
+.sgi-bt b{display:block;font-family:var(--disp);font-size:16px;font-weight:650;margin-bottom:5px}
+.sgi-bt small{display:block;font-size:11.5px;line-height:1.55;color:var(--encre3)}
+.sgi-actif{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--encre2);flex-wrap:wrap}
+.sgi-actif b{color:var(--encre)}
+.sgi-actif .bt{margin-left:auto;padding:5px 13px;font-size:12px}
+.rubr{font-family:var(--disp);font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--encre3);margin:30px 0 -6px;padding-top:6px;scroll-margin-top:16px}
+.rubr:first-of-type{margin-top:6px}
 .carte{background:var(--carte);border:1px solid var(--trait);border-radius:var(--r);padding:22px;margin:16px 0;
   transition:border-color .15s ease,box-shadow .15s ease}
 .graphe .investi{fill:none;stroke:var(--encre3);stroke-width:1.4;stroke-dasharray:4 4;opacity:.75;stroke-linejoin:round}
@@ -498,7 +533,7 @@ main section{animation:apparait .16s ease}
       <div id="avisCours"></div>
       <div class="duo">
         <div class="carte" style="margin-top:0">
-          <h2>Mes positions <span class="sous" id="sPos"></span></h2>
+          <h2>Mes positions <span class="sous" id="sPos"></span></h2><div class="expl-slot" data-expl="positions"></div>
           <div id="listePos"></div>
         </div>
         <div class="carte" style="margin-top:0">
@@ -513,17 +548,17 @@ main section{animation:apparait .16s ease}
 
     <section id="vue-analyse" hidden>
       <div class="carte">
-        <h2>Performance <span class="sous" id="sPerf"></span></h2>
+        <h2>Performance <span class="sous" id="sPerf"></span></h2><div class="expl-slot" data-expl="perfglobale"></div>
         <div class="stats" id="statsGlobal"></div>
       </div>
       <div class="carte">
-        <h2>Sur la période affichée <span class="sous" id="sPeriode"></span></h2>
+        <h2>Sur la période affichée <span class="sous" id="sPeriode"></span></h2><div class="expl-slot" data-expl="perfperiode"></div>
         <div class="stats" id="statsPeriode"></div>
         <p class="aide">Le <strong>gain net</strong> retire les apports et retraits : c'est ce que ton argent a produit, pas ce que tu y as versé. Le <strong>TRI</strong> pondère chaque versement par le temps qu'il a passé investi — c'est la seule mesure comparable à un taux d'intérêt.</p>
       </div>
 
       <div class="carte">
-        <h2>Comparaison au Marché <span class="sous">BRVM Composite & BRVM 30</span></h2>
+        <h2>Comparaison au Marché <span class="sous">BRVM Composite & BRVM 30</span></h2><div class="expl-slot" data-expl="marche"></div>
         <div class="champs" style="max-width:800px; margin-bottom: 20px;">
           <div><label for="iBrc1">BRVM Comp. début (<span id="lblIndD1"></span>)</label><input type="number" id="iBrc1" step="0.01" placeholder="Ex: 210.5"></div>
           <div><label for="iBrc2">BRVM Comp. fin (<span id="lblIndD2"></span>)</label><input type="number" id="iBrc2" step="0.01" placeholder="Ex: 230.2"></div>
@@ -534,11 +569,12 @@ main section{animation:apparait .16s ease}
         <div class="stats" id="resMarche"></div>
       </div>
       <div class="carte">
-        <h2>Détail par ligne</h2>
+        <h2>Détail par ligne</h2><div class="expl-slot" data-expl="detailligne"></div>
         <table>
-          <thead><tr><th>Valeur</th><th class="num">Qté</th><th class="num">PRU</th><th class="num">Cours</th><th class="num">Investi</th><th class="num">Valorisation</th><th class="num">Latent</th><th class="num">%</th><th class="num">Réalisé</th><th class="num">Dividendes</th></tr></thead>
+          <thead><tr><th>Valeur</th><th class="num">Qté</th><th class="num">PRU</th><th class="num">Point mort</th><th class="num">Cours</th><th class="num">Marge</th><th class="num">Investi</th><th class="num">Valorisation</th><th class="num">Latent</th><th class="num">%</th><th class="num">Réalisé</th><th class="num">Dividendes</th></tr></thead>
           <tbody id="tbDetail"></tbody><tfoot id="tfDetail"></tfoot>
         </table>
+        <p class="aide" id="noteDetail"></p>
       </div>
     </section>
 
@@ -548,7 +584,7 @@ main section{animation:apparait .16s ease}
 
     <section id="vue-transactions" hidden>
       <div class="carte">
-        <h2>Journal <span class="sous" id="sJournal"></span></h2>
+        <h2>Journal <span class="sous" id="sJournal"></span></h2><div class="expl-slot" data-expl="journal"></div>
         <p class="chapo">Tout part d'ici. Le bouton <strong>+</strong> en bas à droite ouvre la saisie directe — achat, vente, frais, dividende — sans passer par un import.</p>
         <div class="filtres">
           <input id="jQ" placeholder="Chercher une valeur, un libellé, une date…" autocomplete="off">
@@ -564,9 +600,11 @@ main section{animation:apparait .16s ease}
     </section>
 
     <section id="vue-importer" hidden>
-      <div class="carte">
-        <h2>Importer tes relevés SBIF ou Coris</h2>
-        <p class="chapo">Dépose tes relevés PDF — la <strong>SBIF</strong> (espèces + titre) comme <strong>Coris Bourse</strong> (relevé chronologique). Le carnet reconnaît chaque source, la remet dans le bon ordre et la confronte : chez la SBIF, le relevé d'espèces bâtit le journal et le relevé titre révèle le courtage ; chez Coris, le relevé unique porte déjà le cours de chaque ordre, donc le courtage se déduit tout seul. Un .csv, un .txt ou un copier-coller marchent aussi.</p>
+      <div class="carte" id="impChoix" style="margin-top:0"></div>
+      <div class="carte" id="impCarte" hidden>
+        <h2 id="impTitre">Importer tes relevés</h2>
+        <div class="expl-slot" data-expl="importer"></div>
+        <p class="chapo" id="impChapo"></p>
         <div class="zone" id="zone">
           <textarea id="colle" placeholder="Glisse ton relevé PDF sur cette zone — ou ouvre-le, Ctrl+A, Ctrl+C, et colle ici (Ctrl+V).
 
@@ -588,7 +626,7 @@ Formats compris :
 
     <section id="vue-controle" hidden>
       <div class="carte">
-        <h2>Réconciliation <span class="sous" id="sCtrl"></span></h2>
+        <h2>Réconciliation <span class="sous" id="sCtrl"></span></h2><div class="expl-slot" data-expl="controle"></div>
         <div id="ctrlCorps"></div>
         <p class="aide">Le carnet recalcule ta position à partir des seules écritures du journal, puis la confronte à la situation officielle de ta SGI (relevé SBIF ou état de portefeuille Coris). Toute divergence signale une écriture manquante — presque toujours un mouvement antérieur à la période extraite.</p>
       </div>
@@ -596,7 +634,7 @@ Formats compris :
 
     <section id="vue-cours" hidden>
       <div class="carte">
-        <h2>Relever un cours</h2>
+        <h2>Relever un cours</h2><div class="expl-slot" data-expl="coursv"></div>
         <div class="champs" style="max-width:640px">
           <div><label for="cTick">Valeur</label><input id="cTick" list="tickers" autocomplete="off" placeholder="SNTS"></div>
           <div><label for="cDate">Date</label><input type="date" id="cDate"></div>
@@ -614,15 +652,19 @@ Formats compris :
     </section>
 
     <section id="vue-reglages" hidden>
+      <div class="carte" style="margin-top:0">
+        <h2>Ta société de gestion <span class="sous">qui tient ton compte</span></h2>
+        <div id="sgiReglages"></div>
+      </div>
       <div class="carte">
-        <h2>Correspondance des libellés SBIF <span class="sous">à vérifier</span></h2>
+        <h2>Correspondance des libellés <span class="sous">à vérifier</span></h2>
         <table><thead><tr><th>Libellé de la SBIF</th><th>Code BRVM</th><th></th></tr></thead><tbody id="tbAlias"></tbody></table>
         <div class="rangee">
           <input id="aNom" placeholder="BANK OF AFRICA CI" style="max-width:280px">
           <input id="aCode" placeholder="BOAC" style="max-width:130px;text-transform:uppercase">
           <button class="bt fant" id="btAlias">Ajouter</button>
         </div>
-        <p class="aide">La SBIF nomme les titres en clair, la BRVM en codes. Ces correspondances sont <strong>mes propositions, pas des certitudes</strong> — recoupe-les avec ta Boussole. Modifier un code renomme aussi les écritures déjà enregistrées.</p>
+        <p class="aide">La SBIF nomme les titres en clair, la BRVM en codes (Coris et SA2IF utilisent déjà les codes). Ces correspondances sont <strong>mes propositions, pas des certitudes</strong> — recoupe-les avec ta Boussole. Modifier un code renomme aussi les écritures déjà enregistrées.</p>
       </div>
       <div class="carte">
         <h2>Frais de courtage</h2>
@@ -688,6 +730,11 @@ Formats compris :
   <div class="rangee"><button class="bt fant" id="dNon">Annuler</button><button class="bt" id="dOui">Confirmer</button></div>
 </div>
 <div id="bulle" hidden></div>
+<div class="voile" id="voileL" hidden style="z-index:90"></div>
+<div class="dialogue" id="lexBoite" hidden role="dialog" aria-modal="true" aria-labelledby="lexTitre" style="z-index:91">
+  <h3 id="lexTitre"></h3><p id="lexCorps"></p>
+  <div class="rangee"><button class="bt pri" id="lexOk">J'ai compris</button></div>
+</div>
 <div class="acte" id="acte" hidden>
   <span class="acte-txt" id="acteTxt"></span>
   <button class="bt fant" id="acteNon">Abandonner</button>
@@ -713,7 +760,7 @@ Formats compris :
 "use strict";
 /* ================= stockage ================= */
 const CLE="carnet-cote-brvm-v2";
-const VERSION="17 juillet 2026 · build 14";
+const VERSION="21 juillet 2026 · build 17";
 let stockageOk=true;
 const ALIAS_DEF={
  "AIR LIQUIDE COTE D I":"SIVC","AIR LIQUIDE COTE D IVOIRE":"SIVC",
@@ -726,7 +773,7 @@ const ALIAS_DEF={
 };
 const compteVide=()=>({transactions:[],cours:{},situation:null,cibles:{}});
 const etatVide=()=>({version:3,actif:"reel",comptes:{reel:compteVide(),virtuel:compteVide()},
-  reglages:{taux:0,fraisMin:0,theme:"auto",gestion:{montant:0,periode:"trimestriel"},alias:Object.assign({},ALIAS_DEF)}});
+  reglages:{taux:0,fraisMin:0,theme:"auto",sgi:"",gestion:{montant:0,periode:"trimestriel"},alias:Object.assign({},ALIAS_DEF)}});
 let S=etatVide(), PERIODE="tout";
 function charger(){
   try{
@@ -1284,7 +1331,21 @@ function detailLigne(k){
     <div><span>Réalisé sur ventes</span><b class="${cls(p.realise)}">${p.realise?signe(p.realise):"0"}<span class="cfa">FCFA</span></b></div>
     <div><span>Dividendes perçus</span><b>${p.dividendes?fcfa(p.dividendes):"0"}<span class="cfa">FCFA</span></b></div>
     <div class="fort"><span>Gain total</span><b class="${cls(total)}">${signe(total)}<span class="cfa">FCFA</span><em class="${cls(total)}" style="display:block">${pc(total/p.cout*100)}</em></b></div>
+    ${(()=>{const tc=tauxCourtage(),pm=pointMort(p,tc);
+      if(!pm)return "";
+      const marge=(cc-pm.px)/pm.px*100;
+      return `<div><span>Point mort à la revente</span><b>${fcfa(pm.px,2)}<span class="cfa">FCFA</span><em style="display:block;color:var(--encre3);font-weight:500">${pm.pxNet<pm.px?fcfa(pm.pxNet,2)+" en tenant compte des dividendes":"frais de sortie compris"}</em></b></div>
+      <div><span>Marge sur le point mort</span><b class="${cls(marge)}">${pc(marge)}<em style="display:block;color:var(--encre3);font-weight:500">${marge>=0?"vendre aujourd'hui laisserait un gain":"vendre aujourd'hui laisserait une perte"}</em></b></div>`})()}
   </div>
+  ${(()=>{const h=histoPRU(k).filter(x=>x.pru!=null);
+    if(h.length<2)return "";
+    const li=h.map(x=>`<tr><td style="white-space:nowrap">${dateFr(x.date)}</td>
+      <td style="font-size:11.5px;color:var(--encre3)">${x.type==="achat"?"achat":x.type==="vente"?"vente":x.type==="reprise"?"reprise":"division"}${x.q?" "+fcfa(x.q):""}</td>
+      <td class="num">${x.pu!=null?fcfa(x.pu,2):"—"}</td>
+      <td class="num">${fcfa(x.qte)}</td>
+      <td class="num"><b>${fcfa(x.pru,2)}</b></td></tr>`).join("");
+    return `<div style="font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--encre3);font-weight:700;margin:20px 0 4px">Évolution du prix de revient</div>
+    <table style="font-size:12.5px"><thead><tr><th>Date</th><th>Opération</th><th class="num">Prix payé</th><th class="num">Titres</th><th class="num">PRU après</th></tr></thead><tbody>${li}</tbody></table>`})()}
   <div style="font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--encre3);font-weight:700;margin:20px 0 4px">
     ${tx.length} opération${tx.length>1?"s":""}</div>
   <table style="font-size:12.5px"><tbody>${tx.map(t=>{const pu=prixUnit(t),ef=effet(t);
@@ -1362,18 +1423,28 @@ function vueAnalyse(){
     ${renderIndice("BRVM 30", p301, p302)}
   `;
   const tb=document.getElementById("tbDetail");
-  if(!l.length){tb.innerHTML='<tr><td colspan="10" class="vide">Aucune ligne.</td></tr>';document.getElementById("tfDetail").innerHTML="";return}
-  tb.innerHTML=l.map(o=>`<tr>
+  if(!l.length){tb.innerHTML='<tr><td colspan="12" class="vide">Aucune ligne.</td></tr>';document.getElementById("tfDetail").innerHTML="";return}
+  const tc=tauxCourtage();
+  tb.innerHTML=l.map(o=>{
+    const pm=pointMort(o.p,tc);
+    const marge=pm&&pm.px>0?(o.cc-pm.px)/pm.px*100:null;
+    return `<tr>
     <td class="tick">${esc(o.k)}<span style="display:block;font-weight:400;font-size:11px;color:var(--encre3)">${esc(nomDe(o.k))}</span></td><td class="num">${fcfa(o.p.qte)}</td><td class="num">${fcfa(o.pru,2)}</td>
+    <td class="num">${pm?fcfa(pm.px,2):"—"}${pm&&pm.pxNet<pm.px?`<span style="display:block;font-size:11px;color:var(--encre3)">${fcfa(pm.pxNet,2)} net div.</span>`:""}</td>
     <td class="num">${o.estime?'<span style="color:var(--encre3)">'+fcfa(o.cc,2)+' ?</span>':fcfa(o.cc,2)}</td>
+    <td class="num ${marge!=null?cls(marge):""}">${marge!=null?pc(marge):"—"}</td>
     <td class="num">${fcfa(o.p.cout)}</td><td class="num">${fcfa(o.v)}</td>
     <td class="num ${cls(o.pv)}">${signe(o.pv)}</td><td class="num ${cls(o.pv)}">${pc(o.pv/o.p.cout*100)}</td>
     <td class="num ${cls(o.p.realise)}">${o.p.realise?signe(o.p.realise):"—"}</td>
-    <td class="num">${o.p.dividendes?fcfa(o.p.dividendes):"—"}</td></tr>`).join("");
+    <td class="num">${o.p.dividendes?fcfa(o.p.dividendes):"—"}</td></tr>`}).join("");
   document.getElementById("tfDetail").innerHTML=`<tr style="font-weight:650">
-    <td>Total</td><td></td><td></td><td></td><td class="num">${fcfa(investi)}</td><td class="num">${fcfa(tot)}</td>
+    <td>Total</td><td></td><td></td><td></td><td></td><td></td><td class="num">${fcfa(investi)}</td><td class="num">${fcfa(tot)}</td>
     <td class="num ${cls(latent)}">${signe(latent)}</td><td class="num ${cls(latent)}">${investi>0?pc(latent/investi*100):"—"}</td>
     <td class="num ${cls(realise)}">${realise?signe(realise):"—"}</td><td class="num">${divs?fcfa(divs):"—"}</td></tr>`;
+  const nfo=document.getElementById("noteDetail");
+  if(nfo)nfo.innerHTML=tc.src
+    ?`Le <strong>point mort</strong> est le cours de revente qui te laisse à zéro, frais de sortie compris (barème ${esc(tc.src)} : ${tc.taux.toFixed(3)} %${tc.min?" avec "+fcfa(tc.min)+" FCFA planchers":""}). La <strong>marge</strong> dit de combien le cours actuel le dépasse : négative, la ligne perdrait de l'argent si tu vendais aujourd'hui, même si le latent paraît proche de l'équilibre.`
+    :`Renseigne ton taux de courtage dans <strong>Réglages</strong> pour que le point mort tienne compte des frais de sortie — pour l'instant il se confond avec ton prix de revient.`;
 }
 
 /* ================= feuille d'opération ================= */
@@ -2120,7 +2191,11 @@ function parserCoris(txt){
   };
 }
 /* Nom de la SGI d'origine, pour des messages exacts selon le relevé lu. */
-function nomSGIde(o){return o&&o.src==="coris"?"Coris Bourse":"la SBIF";}
+function nomSGIde(o){
+  const c=sgiCle(), fam=o&&o.src==="coris"?"coris":"sbif";
+  if(c&&SGIS[c].fam===fam)return SGIS[c].nom;
+  return fam==="coris"?"Coris Bourse":"la SBIF";
+}
 
 function analyserTxt(txt){
   /* Coris est reconnu à son en-tête OU à la forme de ses lignes d'ordre —
@@ -2663,8 +2738,12 @@ function dureeLisible(j){
 function blocSoldees(){
   const s=positionsSoldees(AUJ());
   if(!s.length)return'<p class="vide">Aucune position entièrement revendue pour l\'instant : tout ce que tu as acheté est encore en portefeuille.</p>';
-  let totPv=0,totDiv=0,totCout=0,gagnantes=0,perdantes=0;
-  s.forEach(o=>{totPv+=o.pv;totDiv+=o.dividendes;totCout+=o.coutTotal;if(o.gain>0)gagnantes++;else if(o.gain<0)perdantes++;});
+  let totPv=0,totDiv=0,totCout=0,gagnantes=0,perdantes=0,sGains=0,sPertes=0;
+  s.forEach(o=>{totPv+=o.pv;totDiv+=o.dividendes;totCout+=o.coutTotal;
+    if(o.gain>0){gagnantes++;sGains+=o.gain}else if(o.gain<0){perdantes++;sPertes+=-o.gain}});
+  const hit=(gagnantes+perdantes)>0?gagnantes/(gagnantes+perdantes)*100:null;
+  const pf=sPertes>0?sGains/sPertes:(sGains>0?Infinity:null);
+  const gainMoy=gagnantes?sGains/gagnantes:null, perteMoy=perdantes?sPertes/perdantes:null;
   const totGain=totPv+totDiv;
   const rdtGlobal=totCout>0?totGain/totCout*100:null;
   const rows=s.map(o=>{
@@ -2689,13 +2768,861 @@ function blocSoldees(){
     <div><span>Positions bouclées</span><b>${s.length}<em style="display:block;color:var(--encre3);font-weight:500">${gagnantes} gagnante${gagnantes>1?"s":""} · ${perdantes} perdante${perdantes>1?"s":""}</em></b></div>
     <div><span>Plus-value réalisée</span><b class="${cls(totPv)}">${signe(totPv)}<span class="cfa">FCFA</span></b></div>
     ${totDiv>0?`<div><span>Dividendes encaissés</span><b class="g">+${fcfa(totDiv)}<span class="cfa">FCFA</span></b></div>`:""}
+    <div><span>Taux de succès</span><b class="${hit==null?"":hit>=50?"g":"p"}">${hit!=null?hit.toFixed(0)+" %":"—"}<em style="display:block;color:var(--encre3);font-weight:500">${gainMoy!=null?"gain moyen "+fcfa(gainMoy):""}${perteMoy!=null?" · perte moyenne "+fcfa(perteMoy):""}</em></b></div>
+    <div><span>Facteur de profit</span><b class="${pf==null?"":pf>=1?"g":"p"}">${pf==null?"—":pf===Infinity?"∞":pf.toFixed(2)}<em style="display:block;color:var(--encre3);font-weight:500">${fcfa(sGains)} gagnés pour ${fcfa(sPertes)} perdus</em></b></div>
     <div class="fort"><span>Gain total encaissé</span><b class="${cls(totGain)}">${signe(totGain)}<span class="cfa">FCFA</span>${rdtGlobal!=null?`<em style="display:block;font-size:12px">${pc(rdtGlobal)} du capital engagé</em>`:""}</b></div>
-  </div>`;
+  </div>
+  <p class="aide" style="margin-top:-4px">Le taux de succès compte les lignes bouclées en gain ; le facteur de profit rapporte la somme des gains à celle des pertes. Au-dessus de 1, tes sorties gagnantes couvrent les perdantes — un taux de succès faible reste viable si les gains sont bien plus gros que les pertes.</p>`;
   return synth+`<table class="soldTable"><thead><tr>
       <th>Valeur</th><th class="num">Qté tournée</th><th class="num">Investi</th><th class="num">Encaissé</th>
       <th class="num">± value</th><th class="num">Dividendes</th><th class="num">Gain total</th><th>Détention</th>
     </tr></thead><tbody>${rows}</tbody></table>
     <p class="aide">Chaque ligne est un aller-retour terminé : titres achetés puis entièrement revendus. Clique une ligne pour voir le détail des ordres. La plus-value réalisée compare le produit des ventes à ton coût de revient moyen ; le gain total y ajoute les dividendes encaissés pendant la détention.</p>`;
+}
+
+/* ============================================================
+   PÉDAGOGIE — lexique, explications, choix de la SGI
+   Tout le vocabulaire financier de l'application est défini ici,
+   une seule fois, dans les mêmes termes partout.
+   ============================================================ */
+
+/* ---- Les sociétés de gestion reconnues ----
+   SA2IF édite ses relevés au même format que Coris Bourse :
+   la lecture est donc strictement identique, seul le nom change. */
+const SGIS={
+  coris:{nom:"Coris Bourse",fam:"coris",court:"Coris"},
+  sbif :{nom:"la SBIF",fam:"sbif" ,court:"SBIF"},
+  sa2if:{nom:"SA2IF",fam:"coris",court:"SA2IF"}
+};
+const sgiCle=()=>SGIS[S.reglages.sgi]?S.reglages.sgi:null;
+function sgiNom(){const c=sgiCle();return c?SGIS[c].nom:"ta SGI"}
+function sgiCourt(){const c=sgiCle();return c?SGIS[c].court:"ta SGI"}
+function sgiFam(){const c=sgiCle();return c?SGIS[c].fam:null}
+
+/* ---- Lexique : chaque mot compliqué, expliqué une bonne fois ---- */
+const LEX={
+  pru:["Prix de revient unitaire (PRU ou CMP)",
+    "Ce que t'a coûté en moyenne un seul titre, frais d'achat compris. Si tu achètes 10 actions à 1 000 F puis 10 à 1 400 F, ton PRU est de 1 200 F. C'est le prix à battre : au-dessus, tu gagnes ; en dessous, tu perds."],
+  valorisation:["Valorisation",
+    "Ce que valent tes titres aujourd'hui, au dernier cours connu : quantité × cours. Ce n'est pas de l'argent que tu as encaissé, seulement ce que le marché est prêt à payer maintenant."],
+  latent:["Plus-value latente",
+    "Le gain que tu aurais si tu vendais maintenant. « Latent » veut dire sur le papier : tant que tu n'as pas vendu, il peut encore grandir ou disparaître."],
+  realise:["Plus-value réalisée",
+    "Le gain (ou la perte) devenu définitif parce que tu as vendu. Il compare l'argent encaissé à la vente à ce que les titres t'avaient coûté."],
+  dividende:["Dividende",
+    "La part des bénéfices qu'une société verse à ses actionnaires, en général une fois par an. C'est de l'argent qui tombe sur ton compte sans que tu vendes quoi que ce soit."],
+  courtage:["Courtage",
+    "La commission que prend ta SGI sur chaque ordre. Elle est comprise dans le montant débité de ton compte, donc invisible si personne ne la sépare — c'est pour ça que le carnet la reconstitue."],
+  frais:["Frais",
+    "Tout ce que ton intermédiaire prélève en dehors du courtage : tenue de compte, gestion, valorisation, taxes. Petits pris un par un, lourds accumulés sur des années."],
+  apport:["Apport",
+    "L'argent que toi tu as mis sur le compte : virements, dépôts en espèces, mobile money. C'est le capital de départ auquel toute performance se compare."],
+  especes:["Espèces (ou liquidités)",
+    "L'argent qui dort sur ton compte-titres sans être investi. Il ne perd pas de valeur, mais il n'en gagne pas non plus."],
+  tri:["TRI — taux de rentabilité interne",
+    "Ton rendement annuel réel, qui tient compte du moment où tu as versé chaque somme. Verser gros juste avant une hausse ne donne pas le même résultat que verser après : le TRI le sait."],
+  twr:["TWR — rendement pondéré par le temps",
+    "Le rendement de tes choix de placement, en gommant l'effet du calendrier de tes versements. C'est la mesure qui permet de te comparer honnêtement à un indice."],
+  annualise:["Rendement annualisé",
+    "Un gain total ramené à « combien par an ». Gagner 30 % en trois ans, ce n'est pas 30 % par an mais environ 9 % par an."],
+  capital:["Capital engagé",
+    "La somme réellement immobilisée dans une position, frais compris. Le rendement se calcule toujours par rapport à elle, pas par rapport au montant affiché du gain."],
+  pointmort:["Point mort",
+    "Le cours auquel tu dois revendre pour ne rien perdre, une fois payés les frais de sortie. En dessous, la vente te fait perdre de l'argent même si le cours a monté depuis ton achat."],
+  marge:["Marge sur le point mort",
+    "De combien le cours actuel dépasse ton point mort, en pourcentage. Positive : vendre aujourd'hui laisserait un gain. Négative : la vente coûterait plus qu'elle ne rapporte."],
+  hhi:["Indice HHI (Herfindahl-Hirschman)",
+    "Un chiffre qui mesure si ton argent est réparti ou entassé. On additionne le carré du poids de chaque ligne : moins de 1 500, c'est bien réparti ; plus de 2 500, une ou deux valeurs décident de ton sort."],
+  equiv:["Équivalent lignes réelles",
+    "Le nombre de positions de taille identique qui donnerait la même concentration. Avoir 10 lignes dont une pèse 70 % équivaut à n'en avoir que 2 : la diversification est alors une illusion."],
+  rotation:["Rotation",
+    "Combien de fois tu fais tourner ton argent. Une rotation de 2 signifie que tu as acheté et revendu l'équivalent de deux fois ton portefeuille — et payé le courtage à chaque tour."],
+  hit:["Taux de succès",
+    "Le pourcentage de tes positions revendues qui se sont terminées en gain. Un chiffre bas n'est pas forcément mauvais si les gains sont beaucoup plus gros que les pertes."],
+  pf:["Facteur de profit",
+    "La somme de tes gains divisée par la somme de tes pertes. Au-dessus de 1, tu es globalement gagnant ; à 2, tu gagnes deux fois ce que tu perds."],
+  disposition:["Effet de disposition",
+    "Le réflexe de vendre vite ce qui monte et de garder longtemps ce qui baisse, en espérant que ça remonte. C'est l'erreur la plus répandue et la plus coûteuse chez le particulier."],
+  lissage:["Lissage (achats échelonnés)",
+    "Acheter la même valeur en plusieurs fois au lieu d'une seule. Quand le cours varie, cela donne un prix de revient moyen — parfois meilleur, parfois moins bon qu'un achat unique."],
+  dispersion:["Dispersion",
+    "L'écart entre tes différents prix d'achat sur une même valeur. Faible, tu as acheté à des cours proches ; forte, tes points d'entrée sont très inégaux."],
+  ecarttype:["Écart-type",
+    "Une mesure de régularité : elle dit de combien les valeurs s'éloignent en moyenne de leur moyenne. Petit écart-type = comportement régulier, grand = irrégulier."],
+  mediane:["Médiane",
+    "La valeur du milieu quand on range tout dans l'ordre. Contrairement à la moyenne, elle n'est pas déformée par un cas extrême."],
+  coutmoyen:["Coût moyen pondéré",
+    "La méthode qu'appliquent les SGI de la BRVM : tous tes titres d'une même société sont mélangés à un prix moyen unique. Vendre en pioche donc au prix moyen, jamais dans un lot précis."],
+  fifo:["FIFO / LIFO",
+    "Deux autres façons de compter : FIFO considère qu'on vend d'abord les titres achetés en premier, LIFO les plus récents. Cela ne change pas ton argent, seulement la plus-value affichée."],
+  cashdrag:["Trésorerie dormante",
+    "L'argent laissé sur le compte sans être investi. Il te protège d'un besoin urgent, mais pendant ce temps il ne travaille pas : c'est un manque à gagner."],
+  contribution:["Contribution à la performance",
+    "Combien de points de rendement chaque valeur a apportés à l'ensemble. Une petite ligne qui double pèse moins qu'une grosse ligne qui monte de 10 % : la contribution le montre."],
+  secteur:["Secteur",
+    "La famille d'activité d'une société : banque, télécoms, agro-industrie, distribution. Deux banques différentes réagissent souvent aux mêmes nouvelles — les répartir ne protège qu'à moitié."],
+  indice:["BRVM Composite et BRVM 30",
+    "Deux thermomètres du marché régional : le Composite suit toutes les sociétés cotées, le BRVM 30 les trente plus échangées. Ils servent de point de comparaison à ta performance."],
+  fractionnement:["Fractionnement (division du nominal)",
+    "Une société multiplie le nombre de ses actions et divise le cours d'autant. Tu détiens plus de titres, chacun vaut moins, ta fortune est identique."],
+  reprise:["Reprise de solde",
+    "Une écriture de départ qui déclare des titres déjà détenus avant le premier relevé importé, pour que le carnet parte de la bonne situation."],
+  yoc:["Rendement sur prix de revient",
+    "Les dividendes reçus rapportés à ce que la ligne t'a coûté, pas à son cours d'aujourd'hui. Une action gardée dix ans peut te rapporter chaque année 15 % de ta mise initiale."],
+  dpa:["Coupon par titre",
+    "Le dividende encaissé divisé par le nombre de titres que tu détenais au moment du paiement. Il permet de vérifier que le compte est juste."],
+  seuil:["Seuil de rentabilité d'un ordre",
+    "Le montant en dessous duquel les frais mangent l'essentiel du gain espéré. Passer un ordre de 20 000 F quand la commission minimale est de 2 500 F revient à perdre 12 % avant même de commencer."],
+  detention:["Durée de détention",
+    "Le temps écoulé entre l'achat et la vente d'une position, ou depuis l'achat pour celles que tu gardes encore. Elle révèle ton horizon réel."],
+  soldee:["Position bouclée",
+    "Une ligne que tu as achetée puis entièrement revendue. Son résultat est définitif : c'est la seule sur laquelle on peut juger sans discuter."],
+  discipline:["Régularité de l'épargne",
+    "La constance avec laquelle tu alimentes ton compte. Verser une somme modeste tous les mois construit un portefeuille plus sûrement que de gros apports imprévisibles."],
+  cours:["Cours",
+    "Le prix auquel une action s'échange en bourse à un instant donné. Le carnet ne connaît que les cours que tes relevés lui apportent ou que tu saisis toi-même."],
+  cible:["Allocation cible",
+    "Le pourcentage que tu décides d'attribuer à chaque valeur. Comparer la cible au réel indique quoi acheter ou vendre pour retrouver l'équilibre choisi."]
+};
+
+function lex(cle,texte){
+  const e=LEX[cle];if(!e)return esc(texte||cle);
+  return `<span class="lex" data-lex="${cle}" role="button" tabindex="0">${esc(texte||e[0])}</span>`;
+}
+function ouvrirLex(cle){
+  const e=LEX[cle];if(!e)return;
+  const b=document.getElementById("lexBoite"),v=document.getElementById("voileL");
+  document.getElementById("lexTitre").textContent=e[0];
+  document.getElementById("lexCorps").textContent=e[1];
+  v.hidden=false;b.hidden=false;
+  document.getElementById("lexOk").focus();
+}
+function fermerLex(){
+  document.getElementById("lexBoite").hidden=true;
+  document.getElementById("voileL").hidden=true;
+}
+
+/* ---- Explications de chaque carte, toutes bâties sur le même plan :
+        ce que ça mesure · comment le lire · à quoi ça sert ---- */
+const EXPL={
+positions:["Ce que tu possèdes aujourd'hui, valeur par valeur.",
+  `Chaque ligne montre le nombre de titres, ton ${lex("pru")} et la ${lex("valorisation")} au dernier cours connu. La couleur dit si tu es au-dessus ou en dessous de ton prix d'achat.`,
+  "C'est ton point de départ : avant toute décision, savoir où l'argent se trouve."],
+repartition:["Le poids de chaque valeur dans ton portefeuille.",
+  "Plus un rectangle est grand, plus cette valeur pèse dans ta fortune. Une case qui occupe la moitié de l'image signifie qu'une seule société décide de la moitié de ton résultat.",
+  "Repérer d'un coup d'œil si tu es réparti ou si tu as tous tes œufs dans le même panier."],
+perfglobale:["Où tu en es depuis le tout premier jour du carnet.",
+  `Le rendement global compare ce que tu possèdes à ce que tu as versé. Le ${lex("tri")} et le ${lex("twr")} traduisent ça en pourcentage annuel : le premier tient compte de tes dates de versement, le second les neutralise.`,
+  "Savoir si ton argent travaille mieux qu'un placement sans risque — et de combien."],
+perfperiode:["La même chose, mais sur la seule période choisie en haut de l'écran.",
+  `Le gain net retire les ${lex("apport","apports")} de la période : verser 100 000 F n'est pas gagner 100 000 F. Le rendement les rapporte au capital réellement engagé pendant ces semaines.`,
+  "Juger un trimestre ou une année sans que tes versements viennent fausser l'image."],
+marche:["Ta performance face au marché régional.",
+  `Saisis la valeur des ${lex("indice","indices BRVM")} aux deux dates : le carnet calcule leur progression et la compare à ton ${lex("twr")}. L'écart s'affiche en points.`,
+  "Répondre à la seule question qui compte vraiment : as-tu fait mieux que si tu avais simplement acheté le marché entier ?"],
+detailligne:["Le tableau complet, ligne par ligne, avec le prix à battre.",
+  `Le ${lex("pointmort")} est le cours de revente qui te laisse à zéro une fois les frais payés ; la ${lex("marge")} dit de combien le cours actuel le dépasse.`,
+  "Savoir, valeur par valeur, laquelle serait vendable avec profit aujourd'hui et laquelle ne l'est pas encore."],
+courtage:["La commission que ta SGI prélève sur chaque ordre.",
+  `Le ${lex("courtage")} est fondu dans le montant débité : le carnet le retrouve en comparant le prix brut du marché au montant réellement payé. Le taux effectif est celui que tu paies vraiment.`,
+  "Vérifier que le barème appliqué correspond bien à celui annoncé, et mesurer ce que tes allers-retours coûtent."],
+frais:["Tout ce qui sort de ton compte sans être un achat.",
+  `Ces ${lex("frais")} sont facturés en clair sur tes relevés : gestion, tenue de compte, valorisation, taxes. Le carnet les additionne et les rapporte à ton gain brut.`,
+  "Voir ce que la performance aurait été sans eux — souvent l'écart le plus facile à réduire."],
+seuil:["Le montant minimum pour qu'un ordre vaille la peine.",
+  `Quand la commission a un plancher, un petit ordre paie un forfait : proportionnellement, il coûte très cher. Le ${lex("seuil")} indique à partir de quel montant ce poids redevient supportable.`,
+  "Regrouper tes achats plutôt que les émietter, et cesser de payer 12 % de frais sur de petites lignes."],
+revenus:["Les dividendes encaissés, année après année.",
+  `Chaque barre est une année, chaque ${lex("dividende")} un versement d'une société dont tu es actionnaire. Cet argent tombe sans que tu vendes quoi que ce soit.`,
+  "Mesurer le revenu que ton portefeuille produit tout seul, et suivre s'il grandit."],
+rendementvaleur:["Ce que chaque valeur te rapporte en dividendes.",
+  `Le ${lex("yoc")} rapporte les coupons perçus à ce que la ligne t'a coûté. Une action achetée bas et gardée longtemps affiche un rendement très supérieur à celui annoncé sur le marché.`,
+  "Identifier tes vraies vaches à lait, celles qui te paient un loyer chaque année."],
+dpa:["Le coupon reçu, ramené à un seul titre.",
+  `Le carnet divise le ${lex("dpa","montant net encaissé")} par le nombre de titres que tu détenais la veille du paiement. Le résultat doit rester cohérent d'une année sur l'autre.`,
+  "Repérer une erreur de détachement, une retenue inattendue ou un versement partiel."],
+reemploi:["Le temps que ton argent reste inutilisé.",
+  "On mesure le délai entre l'encaissement d'un dividende ou d'une vente et l'ordre d'achat suivant. Court, l'argent repart travailler vite ; long, il dort.",
+  "Prendre l'habitude de replacer rapidement : c'est le mécanisme des intérêts composés."],
+attribution:["Qui a réellement fait ta performance.",
+  `La ${lex("contribution")} exprime le gain de chaque valeur en points de rendement de l'ensemble. Les points s'additionnent et retombent exactement sur ton rendement global.`,
+  "Cesser de juger une ligne à son pourcentage isolé et voir ce qu'elle a vraiment apporté au total."],
+soldees:["Tes allers-retours terminés, ceux dont le résultat est définitif.",
+  `Le ${lex("hit")} compte les ${lex("soldee","positions bouclées")} en gain ; le ${lex("pf")} compare la somme des gains à celle des pertes.`,
+  "Juger tes décisions de vente sur des faits, et non sur l'impression laissée par les dernières."],
+methodes:["La même histoire racontée avec trois règles comptables.",
+  `Ta SGI applique le ${lex("coutmoyen")}. Le carnet rejoue tes ventes en ${lex("fifo","FIFO puis en LIFO")} pour montrer ce que la plus-value affichée serait devenue.`,
+  "Comprendre que la plus-value affichée dépend d'une convention — utile dès qu'une fiscalité sur les cessions s'applique."],
+concentration:["Le risque de trop dépendre d'une seule valeur.",
+  `L'${lex("hhi")} résume la répartition en un chiffre, et l'${lex("equiv")} le traduit en nombre de positions comparables.`,
+  "Savoir si une mauvaise nouvelle sur une seule société peut faire basculer tout le portefeuille."],
+secteurs:["La répartition par famille d'activité.",
+  `Deux sociétés d'un même ${lex("secteur")} montent et descendent souvent ensemble. Détenir cinq banques, c'est détenir une seule idée cinq fois.`,
+  "Vérifier que ta diversification est réelle et pas seulement un nombre de lignes."],
+rotationc:["À quelle vitesse tu fais tourner ton argent.",
+  `La ${lex("rotation")} compare le volume échangé au capital immobilisé. Sous 0,5 tu construis, au-dessus de 1,5 tu fais tourner la même somme — et tu paies le ${lex("courtage")} à chaque tour.`,
+  "Distinguer les lignes que tu gardes vraiment de celles que tu ne fais que traverser."],
+duree:["Combien de temps tu gardes réellement tes titres.",
+  `La ${lex("detention","durée de détention")} est pondérée par les montants : un renforcement récent rajeunit la ligne.`,
+  "Confronter l'horizon que tu t'annonces à celui que montrent tes actes."],
+cash:["L'argent qui attend sur le compte.",
+  `La ${lex("cashdrag","trésorerie dormante")} est la part non investie. Le manque à gagner estime ce qu'elle aurait rapporté au rendement de ton portefeuille.`,
+  "Garder une réserve utile sans laisser dormir une somme qui devrait travailler."],
+lissagec:["Ce que tes achats successifs ont changé.",
+  `Le ${lex("lissage")} est comparé à un achat unique fait au prix du premier ordre. La ${lex("dispersion")} indique l'écart entre tes points d'entrée.`,
+  "Savoir si étaler tes achats t'a servi, et si renforcer à la baisse a payé ou aggravé."],
+dispositionc:["Le biais qui coupe les gains et laisse courir les pertes.",
+  `On compare ta propension à solder une ligne gagnante à celle de solder une perdante. L'écart mesure l'${lex("disposition","effet de disposition")}.`,
+  "Prendre conscience d'un réflexe qui coûte cher, et décider de vendre sur des critères plutôt que sur l'émotion."],
+disciplinec:["La régularité avec laquelle tu alimentes le compte.",
+  `Le score repose sur l'${lex("ecarttype")} des délais entre versements : 100, c'est un rythme d'horloge ; 0, des apports au gré des rentrées.`,
+  "Un versement régulier, même petit, bat presque toujours l'attente du bon moment."],
+flux:["Tout ce qui est entré et sorti, année par année.",
+  "Une ligne par année : versé, acheté, vendu, dividendes, frais. C'est la photographie brute de ton activité.",
+  "Retrouver rapidement une année et vérifier qu'aucun mouvement ne manque."],
+cibles:["L'équilibre que tu décides, face à celui que tu as.",
+  `Tu fixes un pourcentage ${lex("cible","cible")} par valeur ; le carnet calcule l'écart et le geste exact pour le combler.`,
+  "Rééquilibrer sans improviser, et répartir un nouvel apport là où il manque."],
+projection:["Où mènerait ton effort d'épargne s'il continuait.",
+  "On applique un rendement constant à ton capital actuel et à tes versements futurs. La courbe basse montre ce que tu auras versé, l'écart entre les deux est le travail de l'argent.",
+  "Donner une échelle à l'effort. Ce n'est pas une prévision : aucun rendement n'est garanti."],
+controle:["La vérification entre ton carnet et ta SGI.",
+  "Le carnet recalcule ta position à partir des seules écritures du journal, puis la compare à la situation officielle du relevé.",
+  "Détecter une écriture manquante — presque toujours un mouvement antérieur à la période importée."],
+coursv:["L'historique des prix que le carnet connaît.",
+  `Chaque ${lex("cours")} daté ajoute un point à tes courbes. Ils viennent de tes relevés, de tes ordres, ou de ta saisie.`,
+  "Plus il y a de points, plus la valorisation et les courbes sont justes."],
+journal:["Toutes tes écritures, dans l'ordre.",
+  "Achat, vente, dividende, frais, versement, retrait : tout part d'ici. Chaque calcul de l'application se déduit de cette liste.",
+  "Corriger une erreur à la source plutôt que de discuter un résultat qui en découle."],
+importer:["La lecture automatique de tes relevés.",
+  "Le carnet reconnaît le format, remet les opérations dans l'ordre et te montre ce qu'il a compris avant d'écrire quoi que ce soit.",
+  "Constituer ton historique en quelques minutes au lieu de tout ressaisir."]
+};
+
+function explHtml(cle){
+  const e=EXPL[cle];if(!e)return"";
+  return `<details class="expl"><summary>Comprendre cette carte</summary>
+    <div class="expl-c">
+      <p><b>Ce que ça mesure.</b> ${e[0]}</p>
+      <p><b>Comment le lire.</b> ${e[1]}</p>
+      <p><b>À quoi ça sert.</b> ${e[2]}</p>
+    </div></details>`;
+}
+/* Les emplacements <div class="expl-slot" data-expl="..."> sont remplis
+   automatiquement, qu'ils viennent du HTML de départ ou d'un rendu. */
+function remplirExpl(racine){
+  (racine||document).querySelectorAll(".expl-slot[data-expl]").forEach(el=>{
+    if(el.dataset.fait)return;
+    const h=explHtml(el.dataset.expl);
+    if(!h)return;
+    el.innerHTML=h;el.dataset.fait="1";
+  });
+}
+
+/* ---- Carte lexique complète ---- */
+function blocLexique(){
+  const cles=Object.keys(LEX).sort((a,b)=>LEX[a][0].localeCompare(LEX[b][0],"fr"));
+  return '<div class="lexliste">'+cles.map(k=>
+    `<div><b>${esc(LEX[k][0])}</b><span>${esc(LEX[k][1])}</span></div>`).join("")+'</div>';
+}
+
+/* ---- La même question, accessible depuis les Réglages ---- */
+function rendreSgiReglages(){
+  const el=document.getElementById("sgiReglages");if(!el)return;
+  const c=sgiCle();
+  el.innerHTML=`<p class="chapo" style="margin-top:0">${c
+    ? "Tes relevés viennent de <strong>"+esc(SGIS[c].nom.replace(/^la /,""))+"</strong>. Ce choix n'influence aucun calcul : il adapte seulement le vocabulaire et les consignes d'import."
+    : "Tu n'as pas encore dit qui tient ton compte. Ce choix n'influence aucun calcul : il adapte le vocabulaire et les consignes d'import."}</p>
+    <div class="sgi-choix">${Object.keys(SGIS).map(k=>`<button class="sgi-bt" data-sgi2="${k}" ${k===c?'style="border-color:var(--marque)"':""}>
+      <b>${esc(SGIS[k].nom.replace(/^la /,""))}${k===c?" ·":""}</b>
+      <small>${k==="sbif"?"Relevé d'espèces (ANNEXE) + relevé titre":k==="coris"?"Relevé chronologique + état consolidé":"Format identique à Coris Bourse"}</small></button>`).join("")}</div>
+    <p class="aide">SA2IF édite ses relevés exactement au même format que Coris Bourse : la lecture est identique, seul le nom affiché change.</p>`;
+  el.querySelectorAll("[data-sgi2]").forEach(b=>b.addEventListener("click",()=>{
+    S.reglages.sgi=b.dataset.sgi2;sauver();rendreSgiReglages();
+    if(typeof vueImport==="function")vueImport();
+    dire("Relevés "+SGIS[b.dataset.sgi2].court+" enregistrés.","ok");
+  }));
+}
+
+/* ---- Vue Importer : on demande d'abord de quelle SGI vient le relevé ---- */
+function vueImport(){
+  const ch=document.getElementById("impChoix"),ca=document.getElementById("impCarte");
+  if(!ch||!ca)return;
+  const c=sgiCle();
+  if(!c){
+    ca.hidden=true;
+    ch.innerHTML=`<h2>D'où vient ce relevé ?</h2>
+      <p class="chapo">Dis-moi qui tient ton compte. Cela ne change rien aux calculs — le carnet reconnaît de toute façon le format tout seul — mais l'application te parlera ensuite avec le bon nom, et les instructions d'import seront celles de ta société de gestion.</p>
+      <div class="sgi-choix">
+        ${Object.keys(SGIS).map(k=>`<button class="sgi-bt" data-sgi="${k}">
+          <b>${esc(SGIS[k].nom.replace(/^la /,""))}</b>
+          <small>${k==="sbif"?"Relevé d'espèces (ANNEXE) + relevé titre":k==="coris"?"Relevé chronologique + état de portefeuille consolidé":"Même format que Coris Bourse : relevé chronologique et état consolidé"}</small></button>`).join("")}
+      </div>
+      <p class="aide">Tu pourras changer d'avis à tout moment. Si tu as des comptes chez deux sociétés, choisis celle du relevé que tu vas importer maintenant.</p>`;
+  }else{
+    ca.hidden=false;
+    ch.innerHTML=`<div class="sgi-actif">
+      <span>Relevés de <b>${esc(SGIS[c].nom.replace(/^la /,""))}</b></span>
+      <button class="bt fant" id="btSgiChange">Changer</button></div>`;
+    const est=f=>SGIS[c].fam===f;
+    document.getElementById("impTitre").innerHTML=`Importer tes relevés ${esc(SGIS[c].court)}`;
+    document.getElementById("impChapo").innerHTML=est("sbif")
+      ? `Dépose tes relevés PDF de la <strong>SBIF</strong>. Il en faut deux, et ils ne disent pas la même chose : le <strong>relevé d'espèces (ANNEXE)</strong> bâtit ton journal, le <strong>relevé titre</strong> donne le prix brut de chaque ordre et révèle ainsi ton ${lex("courtage")}. Importe-les tous les deux, dans n'importe quel ordre : le carnet les remet d'aplomb. Un .csv, un .txt ou un simple copier-coller marchent aussi.`
+      : `Dépose tes relevés PDF de <strong>${esc(SGIS[c].court)}</strong>. Le <strong>relevé chronologique</strong> suffit à bâtir tout ton journal : chaque ordre y porte déjà son ${lex("cours")}, donc le ${lex("courtage")} se déduit tout seul. Ajoute l'<strong>état de portefeuille consolidé</strong> pour obtenir les cours du jour et vérifier tes positions. Un .csv, un .txt ou un simple copier-coller marchent aussi.`;
+    const ta=document.getElementById("colle");
+    if(ta)ta.placeholder=`Glisse ton relevé PDF sur cette zone — ou ouvre-le, Ctrl+A, Ctrl+C, et colle ici (Ctrl+V).\n\nFormats compris :\n`+(est("sbif")
+      ? ` · ANNEXE — mouvements d'espèces\n · II Portefeuille — positions et cours`
+      : ` · Relevé chronologique — mouvements et cours des ordres\n · État de portefeuille consolidé — positions et cours du jour`);
+    const b=document.getElementById("btSgiChange");
+    if(b)b.addEventListener("click",()=>{S.reglages.sgi="";sauver();vueImport()});
+  }
+  ch.querySelectorAll("[data-sgi]").forEach(b=>b.addEventListener("click",()=>{
+    S.reglages.sgi=b.dataset.sgi;sauver();vueImport();
+    dire("Relevés "+SGIS[b.dataset.sgi].court+" — tu peux importer.","ok");
+  }));
+  remplirExpl(document.getElementById("vue-importer"));
+}
+
+/* ============================================================
+   MODULE ANALYTIQUE AVANCÉ
+   Tout ce qui suit ne lit que le journal : aucune donnée externe,
+   aucune série de cours quotidienne n'est supposée.
+   ============================================================ */
+
+/* Taux de courtage retenu : mesuré sur les ordres si le relevé titre
+   l'a révélé, sinon barème saisi dans les réglages. */
+function tauxCourtage(){
+  let court=0,brut=0;
+  for(const t of triees())if(t.courtage!=null&&t.brut){court+=t.courtage;brut+=t.brut}
+  const mn=+S.reglages.fraisMin||0;
+  if(brut>0&&court>0)return{taux:court/brut*100,min:mn,src:"mesuré sur tes ordres"};
+  if(+S.reglages.taux>0)return{taux:+S.reglages.taux,min:mn,src:"barème des réglages"};
+  return{taux:0,min:mn,src:null};
+}
+
+/* Point mort : cours de revente qui laisse le résultat à zéro,
+   frais de sortie compris. pxNet déduit les dividendes déjà encaissés. */
+function pointMort(p,tc){
+  if(!p||p.qte<=0||p.cout<=0)return null;
+  const q=p.qte,tx=Math.min(0.9,(tc.taux||0)/100),mn=tc.min||0;
+  const bp=(c)=>Math.max(c/(q*(1-tx)),(c+mn)/q);
+  const cNet=Math.max(0,p.cout-(p.dividendes||0));
+  return{px:bp(p.cout),pxNet:bp(cNet)};
+}
+
+/* Indice de Herfindahl-Hirschman sur une liste {k,v}. */
+function hhiDe(list){
+  const tot=list.reduce((s,o)=>s+o.v,0);
+  if(tot<=0)return null;
+  const h=list.reduce((s,o)=>s+Math.pow(o.v/tot*100,2),0);
+  return{h,equiv:h>0?10000/h:0};
+}
+function libHHI(h){
+  if(h<1000)return{t:"ok",m:"très diversifié"};
+  if(h<1500)return{t:"ok",m:"diversifié"};
+  if(h<2500)return{t:"info",m:"modérément concentré"};
+  if(h<4000)return{t:"ko",m:"concentré"};
+  return{t:"ko",m:"très concentré"};
+}
+
+/* Historique du prix de revient d'une ligne, pas à pas. */
+function histoPRU(k){
+  let q=0,c=0;const out=[];
+  for(const t of triees()){
+    if(t.valeur!==k)continue;
+    if(t.type==="achat"){const cu=coutAchat(t);q+=t.quantite;c+=cu;
+      out.push({date:t.date,type:"achat",q:t.quantite,pu:cu/t.quantite,qte:q,pru:c/q})}
+    else if(t.type==="reprise"){q+=t.quantite;c+=t.quantite*t.cours;
+      out.push({date:t.date,type:"reprise",q:t.quantite,pu:t.cours,qte:q,pru:c/q})}
+    else if(t.type==="vente"){const pru=q>0?c/q:0;c=Math.max(0,c-pru*t.quantite);q-=t.quantite;
+      out.push({date:t.date,type:"vente",q:t.quantite,pu:prixUnit(t),qte:q,pru:q>0?c/q:null})}
+    else if(t.type==="fractionnement"){q*=t.ratio;
+      out.push({date:t.date,type:"fractionnement",q:null,pu:null,qte:q,pru:q>0?c/q:null})}
+  }
+  return out;
+}
+
+/* Moteur de lots : rejoue l'historique en FIFO ou LIFO pour comparer
+   le résultat réalisé avec la méthode du coût moyen appliquée par la SGI. */
+function realiseParMethode(methode){
+  const lots={},res={};
+  const R=k=>res[k]||(res[k]={realise:0,ventes:0});
+  for(const t of triees()){
+    if(!t.valeur)continue;
+    const L=lots[t.valeur]||(lots[t.valeur]=[]);
+    if(t.type==="achat")L.push({q:t.quantite,pu:coutAchat(t)/t.quantite});
+    else if(t.type==="reprise")L.push({q:t.quantite,pu:t.cours});
+    else if(t.type==="fractionnement")L.forEach(x=>{x.q*=t.ratio;x.pu/=t.ratio});
+    else if(t.type==="vente"){
+      let reste=t.quantite,cout=0;
+      while(reste>1e-9&&L.length){
+        const i=methode==="fifo"?0:L.length-1,lot=L[i];
+        const pris=Math.min(lot.q,reste);
+        cout+=pris*lot.pu;lot.q-=pris;reste-=pris;
+        if(lot.q<=1e-9)L.splice(i,1);
+      }
+      const r=R(t.valeur);r.realise+=produitVente(t)-cout;r.ventes++;
+    }
+  }
+  return res;
+}
+
+/* Renforcements : chaque achat comparé au prix de revient qui précède. */
+function analyseRenforts(){
+  const etat={},out=[];
+  for(const t of triees()){
+    if(!t.valeur)continue;
+    const p=etat[t.valeur]||(etat[t.valeur]={q:0,c:0});
+    if(t.type==="achat"){
+      const avant=p.q>0?p.c/p.q:null,pu=coutAchat(t)/t.quantite;
+      out.push({k:t.valeur,date:t.date,pu,avant,
+        sens:avant==null?"initial":(pu<avant?"baisse":"hausse")});
+      p.q+=t.quantite;p.c+=coutAchat(t);
+    }else if(t.type==="reprise"){p.q+=t.quantite;p.c+=t.quantite*t.cours}
+    else if(t.type==="vente"){const pru=p.q>0?p.c/p.q:0;p.c=Math.max(0,p.c-pru*t.quantite);p.q-=t.quantite}
+    else if(t.type==="fractionnement")p.q*=t.ratio;
+  }
+  return out;
+}
+
+/* Effet de disposition, mesure d'Odean : on compare la propension à
+   solder les gains à celle de solder les pertes. */
+function effetDisposition(){
+  const e=etatA(AUJ());
+  let gr=0,pr=0,gl=0,pl=0;
+  const durG=[],durP=[];
+  for(const k in e.positions){
+    const p=e.positions[k];
+    if(p.qte<=0.0001&&p.qteVendue>0){
+      const g=p.realise;
+      if(g>0)gr++;else if(g<0)pr++;
+      if(p.premierAchat&&p.derniereVente){
+        const j=Math.round((new Date(p.derniereVente)-new Date(p.premierAchat))/86400000);
+        (g>=0?durG:durP).push(j);
+      }
+    }else if(p.qte>0&&p.cout>0){
+      const c=coursA(k,AUJ()),pru=p.cout/p.qte;
+      const lat=(c!=null?c:pru)*p.qte-p.cout;
+      if(lat>0)gl++;else if(lat<0)pl++;
+    }
+  }
+  const pgr=(gr+gl)>0?gr/(gr+gl):null;
+  const plr=(pr+pl)>0?pr/(pr+pl):null;
+  const moy=a=>a.length?a.reduce((s,x)=>s+x,0)/a.length:null;
+  return{gr,pr,gl,pl,pgr,plr,
+    ecart:(pgr!=null&&plr!=null)?(pgr-plr):null,
+    dureeG:moy(durG),dureeP:moy(durP)};
+}
+
+/* Âge des positions ouvertes, pondéré par le capital engagé. */
+function ageMoyen(){
+  const e=etatA(AUJ()),auj=new Date(AUJ());
+  let sc=0,sj=0;const parLigne={};
+  for(const t of triees()){
+    if(t.type!=="achat"&&t.type!=="reprise")continue;
+    const p=e.positions[t.valeur];if(!p||p.qte<=0)continue;
+    const c=t.type==="achat"?coutAchat(t):t.quantite*t.cours;
+    const j=Math.round((auj-new Date(t.date))/86400000);
+    sc+=c;sj+=c*j;
+    const o=parLigne[t.valeur]||(parLigne[t.valeur]={c:0,cj:0});
+    o.c+=c;o.cj+=c*j;
+  }
+  const lignesAge={};for(const k in parLigne)lignesAge[k]=parLigne[k].c>0?parLigne[k].cj/parLigne[k].c:null;
+  return{global:sc>0?sj/sc:null,parLigne:lignesAge};
+}
+
+/* Rotation : volume échangé rapporté au capital immobilisé. */
+function rotation(){
+  const e=etatA(AUJ()),{l,tot}=lignes(AUJ());
+  const parK={};
+  for(const t of triees()){
+    if(t.type!=="achat"&&t.type!=="vente")continue;
+    const o=parK[t.valeur]||(parK[t.valeur]={ach:0,ven:0,na:0,nv:0});
+    if(t.type==="achat"){o.ach+=coutAchat(t);o.na++}else{o.ven+=produitVente(t);o.nv++}
+  }
+  const valK={};l.forEach(o=>valK[o.k]=o.v);
+  const list=Object.keys(parK).map(k=>{
+    const o=parK[k],val=valK[k]||0,vol=o.ach+o.ven;
+    return{k,ach:o.ach,ven:o.ven,na:o.na,nv:o.nv,val,vol,
+      rot:val>0?vol/val:null,solde:!(val>0)};
+  }).sort((a,b)=>b.vol-a.vol);
+  const volTot=list.reduce((s,o)=>s+o.vol,0);
+  const j=Math.max(1,Math.round((new Date(AUJ())-new Date(premiereDate()))/86400000));
+  const annees=j/365.25;
+  const moyenne=valeurMoyenne()||(tot+e.especes);
+  const turn=moyenne>0?(volTot/2)/moyenne:null;
+  return{list,volTot,turn,turnAn:turn!=null&&annees>0?turn/annees:null,annees,moyenne};
+}
+
+/* Valorisation moyenne du compte, échantillonnée sur la vie du carnet. */
+let _valMoy=null;
+function valeurMoyenne(){
+  const d1=premiereDate(),d2=AUJ();
+  const j=Math.round((new Date(d2)-new Date(d1))/86400000);
+  if(j<1)return valeurTotale(d2);
+  const n=Math.min(24,Math.max(4,Math.round(j/30)));
+  let s=0,c=0;
+  for(let i=0;i<=n;i++){s+=valeurTotale(jourPlus(d1,Math.round(j*i/n)));c++}
+  return c?s/c:null;
+}
+
+/* Espèces : moyenne, pic, creux, et coût d'opportunité approché. */
+function tresorerie(){
+  const d1=premiereDate(),d2=AUJ();
+  const j=Math.round((new Date(d2)-new Date(d1))/86400000);
+  if(j<1)return null;
+  const n=Math.min(36,Math.max(4,Math.round(j/15)));
+  let sE=0,sV=0,c=0,mx=-Infinity,mn=Infinity,dMx="",dMn="";
+  for(let i=0;i<=n;i++){
+    const d=jourPlus(d1,Math.round(j*i/n));
+    const e=etatA(d).especes,v=valeurTotale(d);
+    sE+=e;sV+=v;c++;
+    if(e>mx){mx=e;dMx=d}
+    if(e<mn){mn=e;dMn=d}
+  }
+  const espMoy=sE/c,valMoy=sV/c;
+  const part=valMoy>0?espMoy/valMoy*100:null;
+  const w=twr(d1,d2);
+  const manque=(w&&isFinite(w.an))?espMoy*(w.an/100)*(j/365.25):null;
+  return{espMoy,valMoy,part,mx,dMx,mn,dMn,manque,annees:j/365.25};
+}
+
+/* Régularité des apports : écart-type des intervalles entre versements. */
+function discipline(){
+  const ap=triees().filter(t=>t.type==="depot"||t.type==="solde"||t.type==="reprise")
+    .map(t=>({d:t.date,m:t.type==="reprise"?t.quantite*t.cours:t.montant}));
+  if(ap.length<3)return{n:ap.length};
+  const ecarts=[];
+  for(let i=1;i<ap.length;i++)ecarts.push(Math.round((new Date(ap[i].d)-new Date(ap[i-1].d))/86400000));
+  const moy=a=>a.reduce((s,x)=>s+x,0)/a.length;
+  const et=a=>{const m=moy(a);return Math.sqrt(a.reduce((s,x)=>s+(x-m)*(x-m),0)/a.length)};
+  const mi=moy(ecarts),si=et(ecarts);
+  const mm=moy(ap.map(x=>x.m)),sm=et(ap.map(x=>x.m));
+  const cv=mi>0?si/mi:null;
+  const score=cv==null?null:Math.max(0,Math.min(100,Math.round(100*(1-cv))));
+  const parMois={};ap.forEach(x=>{const m=x.d.slice(0,7);parMois[m]=(parMois[m]||0)+x.m});
+  return{n:ap.length,intervalleMoyen:mi,intervalleEcart:si,montantMoyen:mm,montantEcart:sm,cv,score,parMois,premier:ap[0].d,dernier:ap[ap.length-1].d};
+}
+
+/* Délai entre l'encaissement d'un flux et son réemploi en achat. */
+function reemploi(type){
+  const achats=triees().filter(t=>t.type==="achat").map(t=>t.date);
+  const src=triees().filter(t=>t.type===type);
+  const del=[];
+  src.forEach(t=>{
+    const suiv=achats.find(d=>d>=t.date);
+    if(suiv)del.push(Math.round((new Date(suiv)-new Date(t.date))/86400000));
+  });
+  if(!del.length)return null;
+  const tri2=del.slice().sort((a,b)=>a-b);
+  return{n:del.length,moy:del.reduce((s,x)=>s+x,0)/del.length,
+    med:tri2[Math.floor(tri2.length/2)],min:tri2[0],max:tri2[tri2.length-1]};
+}
+
+/* Dividende par action reconstitué à partir du montant net et du solde détenu. */
+function dpaReconstitue(){
+  const out=[];
+  for(const t of triees()){
+    if(t.type!=="dividende"||!t.valeur)continue;
+    const av=etatA(jourPlus(t.date,-1)).positions[t.valeur];
+    const q=av?av.qte:0;
+    out.push({k:t.valeur,date:t.date,montant:t.montant,qte:q,dpa:q>0?t.montant/q:null});
+  }
+  return out.reverse();
+}
+
+/* Attribution : contribution de chaque ligne au rendement global. */
+function attribution(){
+  const d=AUJ(),e=etatA(d);
+  const base=e.apports;
+  const out=[];
+  for(const k in e.positions){
+    const p=e.positions[k];
+    let latent=0;
+    if(p.qte>0){const c=coursA(k,d),pru=p.cout/p.qte;latent=(c!=null?c:pru)*p.qte-p.cout}
+    const g=latent+p.realise+p.dividendes;
+    if(Math.abs(g)<0.5&&p.qte<=0&&!p.dividendes)continue;
+    out.push({k,latent,realise:p.realise,dividendes:p.dividendes,g,
+      pts:base>0?g/base*100:null,ouverte:p.qte>0});
+  }
+  out.sort((a,b)=>b.g-a.g);
+  const gainTitres=out.reduce((s,o)=>s+o.g,0);
+  return{list:out,gainTitres,frais:e.frais,base,
+    fraisPts:base>0?-e.frais/base*100:null,
+    netPts:base>0?(gainTitres-e.frais)/base*100:null};
+}
+
+/* Lissage : ce que l'accumulation progressive a fait gagner ou perdre
+   par rapport à un achat unique au prix du premier ordre. */
+function lissage(){
+  const e=etatA(AUJ()),parK={};
+  for(const t of triees()){
+    if(t.type!=="achat")continue;
+    const o=parK[t.valeur]||(parK[t.valeur]={n:0,q:0,c:0,pus:[],premier:null});
+    o.n++;o.q+=t.quantite;o.c+=coutAchat(t);o.pus.push(coutAchat(t)/t.quantite);
+    if(!o.premier)o.premier=coutAchat(t)/t.quantite;
+  }
+  const rf=analyseRenforts();
+  const list=Object.keys(parK).filter(k=>parK[k].n>1).map(k=>{
+    const o=parK[k],p=e.positions[k];
+    const cmp=o.c/o.q;
+    const simple=o.pus.reduce((s,x)=>s+x,0)/o.pus.length;
+    const baisses=rf.filter(x=>x.k===k&&x.sens==="baisse").length;
+    const hausses=rf.filter(x=>x.k===k&&x.sens==="hausse").length;
+    const ecarts=o.pus,m=simple;
+    const disp=Math.sqrt(ecarts.reduce((s,x)=>s+(x-m)*(x-m),0)/ecarts.length);
+    return{k,n:o.n,premier:o.premier,cmp,simple,
+      gain:(o.premier-cmp)*o.q,
+      effet:o.premier>0?(o.premier-cmp)/o.premier*100:null,
+      baisses,hausses,disp,dispPc:m>0?disp/m*100:null,
+      qte:p?p.qte:0};
+  }).sort((a,b)=>b.gain-a.gain);
+  return list;
+}
+
+/* Seuil de rentabilité d'un ordre : à partir de quel montant les frais
+   cessent d'écraser la performance. */
+function seuilOrdre(tc){
+  if(!tc.src||(tc.taux<=0&&tc.min<=0))return null;
+  const tx=tc.taux/100,mn=tc.min;
+  const friction=m=>m>0?2*Math.max(mn,m*tx)/m*100:null;
+  const pourTol=tol=>{
+    const t=tol/100;
+    if(2*tx>=t)return null;
+    if(mn<=0)return 0;
+    return 2*mn/(t-2*tx);
+  };
+  const bascule=tx>0&&mn>0?mn/tx:null;
+  const ordres=triees().filter(t=>t.type==="achat"||t.type==="vente");
+  const mts=ordres.map(t=>t.type==="achat"?coutAchat(t):produitVente(t)).filter(x=>x>0);
+  const moy=mts.length?mts.reduce((s,x)=>s+x,0)/mts.length:null;
+  const petits=moy!=null&&bascule?mts.filter(m=>m<bascule).length:null;
+  return{tx:tc.taux,mn,src:tc.src,friction,bascule,
+    seuils:[1,2,3].map(t=>({tol:t,m:pourTol(t)})),
+    nOrdres:mts.length,moyOrdre:moy,petits,
+    median:mts.length?mts.slice().sort((a,b)=>a-b)[Math.floor(mts.length/2)]:null};
+}
+
+/* ============ rendus des nouvelles cartes ============ */
+const jrs=n=>n==null?"—":(n<1?"le jour même":n<31?Math.round(n)+" j":n<365?Math.round(n/30.44)+" mois":(n/365.25).toFixed(1)+" ans");
+
+/* --- Seuil de rentabilité d'un ordre --- */
+function blocSeuil(){
+  const so=seuilOrdre(tauxCourtage());
+  if(!so)return'<p class="vide">Renseigne ton barème de courtage dans <strong>Réglages</strong> (taux et frais planchers), ou importe un relevé titre : sans lui je ne peux pas dire à partir de quel montant un ordre devient rentable.</p>';
+  const ex=[25000,50000,100000,250000,500000,1000000];
+  const tbl='<table><thead><tr><th class="num">Montant de l\'ordre</th><th class="num">Frais aller-retour</th><th class="num">Poids sur la performance</th></tr></thead><tbody>'+
+    ex.map(m=>{const f=so.friction(m);
+      return `<tr><td class="num">${fcfa(m)}</td><td class="num">${fcfa(2*Math.max(so.mn,m*so.tx/100))}</td>
+      <td class="num ${f>3?"p":f>1.5?"":"g"}">${f.toFixed(2)} %</td></tr>`}).join("")+'</tbody></table>';
+  const s2=so.seuils.filter(x=>x.m!=null&&x.m>0);
+  return `<div class="stats">
+    <div><span>Barème retenu</span><b>${so.tx.toFixed(3)} %${so.mn?" + "+fcfa(so.mn)+" planchers":""}<em style="display:block;color:var(--encre3);font-weight:500">${esc(so.src)}</em></b></div>
+    <div><span>Ordre moyen passé</span><b>${so.moyOrdre!=null?fcfa(so.moyOrdre):"—"}<span class="cfa">FCFA</span><em style="display:block;color:var(--encre3);font-weight:500">médiane ${so.median!=null?fcfa(so.median):"—"} · ${so.nOrdres} ordre(s)</em></b></div>
+    ${so.bascule?`<div class="fort"><span>Seuil de bascule du plancher</span><b>${fcfa(so.bascule)}<span class="cfa">FCFA</span><em style="display:block;color:var(--encre3);font-weight:500">en dessous, tu paies le forfait</em></b></div>`:""}
+  </div>${tbl}
+  ${s2.length?`<div class="note info" style="margin:16px 0 0">Pour que l'aller-retour te coûte moins de <strong>${s2[0].tol} %</strong>, un ordre doit peser au moins <strong>${fcfa(s2[0].m)} FCFA</strong>${s2[1]?` ; moins de ${s2[1].tol} % dès ${fcfa(s2[1].m)} FCFA`:""}.</div>`:""}
+  ${so.petits!=null&&so.petits>0?`<div class="note ko" style="margin:12px 0 0"><strong>${so.petits} de tes ${so.nOrdres} ordres</strong> sont passés sous le seuil de bascule : sur ceux-là tu as payé le forfait, pas le pourcentage.</div>`:""}
+  <p class="aide">Le poids affiché suppose un achat puis une revente au même montant. C'est le péage minimal à franchir avant que la position ne rapporte quoi que ce soit.</p>`;
+}
+
+/* --- DPA reconstitué --- */
+function blocDPA(){
+  const d=dpaReconstitue();
+  if(!d.length)return'<p class="vide">Aucun dividende encaissé pour l\'instant.</p>';
+  const parK={};d.forEach(x=>{if(x.dpa!=null){(parK[x.k]=parK[x.k]||[]).push(x)}});
+  let anomalies=0;
+  const rows=d.map(x=>{
+    let flag="";
+    if(x.dpa==null){flag='<span class="p">solde inconnu</span>';anomalies++}
+    return `<tr><td class="tick">${esc(x.k)}</td><td>${dateFr(x.date)}</td>
+      <td class="num">${fcfa(x.montant)}</td><td class="num">${x.qte?fcfa(x.qte):"—"}</td>
+      <td class="num">${x.dpa!=null?fcfa(x.dpa,2):flag}</td></tr>`}).join("");
+  const alerte=[];
+  for(const k in parK){
+    const v=parK[k].map(x=>x.dpa);
+    if(v.length<2)continue;
+    const mn=Math.min(...v),mx=Math.max(...v);
+    if(mn>0&&mx/mn>3)alerte.push(`${k} : de ${fcfa(mn,2)} à ${fcfa(mx,2)} FCFA par titre`);
+  }
+  return `<table><thead><tr><th>Valeur</th><th>Date</th><th class="num">Net encaissé</th><th class="num">Titres détenus</th><th class="num">Net par titre</th></tr></thead><tbody>${rows}</tbody></table>
+  ${alerte.length?`<div class="note ko" style="margin:16px 0 0"><strong>Écarts à vérifier</strong> — ${alerte.map(esc).join(" · ")}. Un acompte, un solde ou une retenue fiscale différente expliquent souvent l'écart ; sinon, contrôle le détachement auprès de ta SGI.</div>`:'<div class="note ok" style="margin:16px 0 0">Les coupons unitaires reconstitués sont cohérents d\'une année sur l\'autre.</div>'}
+  <p class="aide">Montant net encaissé ÷ titres détenus la veille du paiement. C'est le coupon réellement reçu, retenue à la source déjà déduite — il peut donc être inférieur au dividende brut annoncé.</p>`;
+}
+
+/* --- Réemploi des dividendes --- */
+function blocReemploi(){
+  const rd=reemploi("dividende"),rv=reemploi("vente");
+  if(!rd&&!rv)return'<p class="vide">Pas encore assez d\'écritures pour mesurer un délai de réemploi.</p>';
+  const ligne=(t,r,aide)=>r?`<div><span>${t}</span><b>${jrs(r.moy)}<em style="display:block;color:var(--encre3);font-weight:500">médiane ${jrs(r.med)} · ${r.n} cas · ${aide}</em></b></div>`:"";
+  return `<div class="stats">
+    ${ligne("Après un dividende",rd,"du plus rapide "+jrs(rd&&rd.min)+" au plus lent "+jrs(rd&&rd.max))}
+    ${ligne("Après une vente",rv,"réemploi du produit de cession")}
+  </div>
+  <p class="aide">Délai entre l'encaissement et l'ordre d'achat suivant. Un délai court fait travailler les intérêts composés ; un délai long laisse dormir la liquidité — vois la carte « Trésorerie dormante ».</p>`;
+}
+
+/* --- Attribution de performance --- */
+function blocAttribution(){
+  const a=attribution();
+  if(!a.list.length)return'<p class="vide">Aucune position à attribuer.</p>';
+  if(!(a.base>0))return'<p class="vide">Aucun apport enregistré : impossible de rapporter les gains à un capital.</p>';
+  const rows=a.list.map(o=>`<tr>
+    <td class="tick">${esc(o.k)}<span style="display:block;font-weight:400;font-size:11px;color:var(--encre3)">${esc(nomDe(o.k))}${o.ouverte?"":" · soldée"}</span></td>
+    <td class="num ${cls(o.latent)}">${o.latent?signe(o.latent):"—"}</td>
+    <td class="num ${cls(o.realise)}">${o.realise?signe(o.realise):"—"}</td>
+    <td class="num">${o.dividendes?fcfa(o.dividendes):"—"}</td>
+    <td class="num ${cls(o.g)}"><b>${signe(o.g)}</b></td>
+    <td class="num ${cls(o.pts)}"><b>${o.pts!=null?(o.pts>0?"+":"")+o.pts.toFixed(2)+" pt":"—"}</b></td></tr>`).join("");
+  return `<table><thead><tr><th>Valeur</th><th class="num">Latent</th><th class="num">Réalisé</th><th class="num">Dividendes</th><th class="num">Gain total</th><th class="num">Contribution</th></tr></thead>
+  <tbody>${rows}</tbody>
+  <tfoot>
+    <tr><td>Sous-total titres</td><td colspan="3"></td><td class="num ${cls(a.gainTitres)}">${signe(a.gainTitres)}</td><td class="num ${cls(a.gainTitres)}">${(a.gainTitres/a.base*100>0?"+":"")+(a.gainTitres/a.base*100).toFixed(2)} pt</td></tr>
+    <tr><td>Frais explicites</td><td colspan="3"></td><td class="num p">−${fcfa(a.frais)}</td><td class="num p">${a.fraisPts!=null?a.fraisPts.toFixed(2)+" pt":"—"}</td></tr>
+    <tr style="font-weight:700"><td>Rendement global</td><td colspan="3"></td><td class="num ${cls(a.gainTitres-a.frais)}">${signe(a.gainTitres-a.frais)}</td><td class="num ${cls(a.netPts)}">${a.netPts!=null?(a.netPts>0?"+":"")+a.netPts.toFixed(2)+" pt":"—"}</td></tr>
+  </tfoot></table>
+  <p class="aide">La contribution rapporte le gain de chaque ligne à l'ensemble des capitaux que tu as versés (${fcfa(a.base)} FCFA). Les points s'additionnent : ils disent quelle valeur a réellement fait ta performance, indépendamment de sa taille apparente.</p>`;
+}
+
+/* --- Rotation --- */
+function blocRotation(){
+  const r=rotation();
+  if(!r.list.length)return'<p class="vide">Aucun ordre passé.</p>';
+  const rows=r.list.map(o=>{
+    const cat=o.solde?"soldée":o.rot==null?"—":o.rot<0.5?"cœur":o.rot<1.5?"stable":"satellite";
+    const coul=cat==="satellite"?"p":cat==="cœur"?"g":"";
+    return `<tr><td class="tick">${esc(o.k)}<span style="display:block;font-weight:400;font-size:11px;color:var(--encre3)">${esc(nomDe(o.k))}</span></td>
+      <td class="num">${o.na}</td><td class="num">${o.nv||"—"}</td>
+      <td class="num">${fcfa(o.ach)}</td><td class="num">${o.ven?fcfa(o.ven):"—"}</td>
+      <td class="num">${o.val?fcfa(o.val):"—"}</td>
+      <td class="num ${coul}">${o.rot!=null?o.rot.toFixed(2)+" \u00d7":"—"}<span style="display:block;font-size:11px;color:var(--encre3)">${cat}</span></td></tr>`}).join("");
+  const q=r.turnAn==null?"":r.turnAn<0.2?"conservation longue durée":r.turnAn<0.6?"gestion posée":r.turnAn<1.5?"gestion active":"gestion très active";
+  return `<div class="stats">
+    <div><span>Volume négocié depuis l'origine</span><b>${fcfa(r.volTot)}<span class="cfa">FCFA</span></b></div>
+    <div><span>Valorisation moyenne du compte</span><b>${r.moyenne!=null?fcfa(r.moyenne):"—"}<span class="cfa">FCFA</span></b></div>
+    <div class="fort"><span>Taux de rotation annuel</span><b class="${r.turnAn!=null&&r.turnAn>1?"p":""}">${r.turnAn!=null?r.turnAn.toFixed(2)+" \u00d7":"—"}<em style="display:block;color:var(--encre3);font-weight:500">${q}</em></b></div>
+  </div>
+  <table><thead><tr><th>Valeur</th><th class="num">Achats</th><th class="num">Ventes</th><th class="num">Acheté</th><th class="num">Vendu</th><th class="num">Détenu</th><th class="num">Rotation</th></tr></thead><tbody>${rows}</tbody></table>
+  <p class="aide">Rotation = volume échangé sur la ligne ÷ capital qui y reste aujourd'hui. En dessous de 0,5 tu bâtis (le « cœur ») ; au-dessus de 1,5 tu fais tourner le même argent (« satellite »), et chaque tour paie le courtage. Le taux annuel rapporte la moitié du volume négocié à la valorisation moyenne du compte.</p>`;
+}
+
+/* --- Lissage / DCA --- */
+function blocLissage(){
+  const L=lissage();
+  if(!L.length)return'<p class="vide">Aucune ligne accumulée en plusieurs fois : le lissage ne se mesure qu\'à partir du deuxième achat sur une même valeur.</p>';
+  const rows=L.map(o=>`<tr>
+    <td class="tick">${esc(o.k)}<span style="display:block;font-weight:400;font-size:11px;color:var(--encre3)">${o.n} achats · ${o.baisses} sous le PRU</span></td>
+    <td class="num">${fcfa(o.premier,2)}</td>
+    <td class="num">${fcfa(o.cmp,2)}</td>
+    <td class="num ${cls(o.effet)}">${o.effet!=null?pc(o.effet):"—"}</td>
+    <td class="num ${cls(o.gain)}">${signe(o.gain)}</td>
+    <td class="num">${o.dispPc!=null?o.dispPc.toFixed(1)+" %":"—"}</td></tr>`).join("");
+  const tot=L.reduce((s,o)=>s+o.gain,0);
+  const bais=L.reduce((s,o)=>s+o.baisses,0),haus=L.reduce((s,o)=>s+o.hausses,0);
+  return `<div class="stats">
+    <div><span>Renforcements sous le prix de revient</span><b>${bais}<em style="display:block;color:var(--encre3);font-weight:500">contre ${haus} au-dessus</em></b></div>
+    <div class="fort"><span>Effet cumulé du lissage</span><b class="${cls(tot)}">${signe(tot)}<span class="cfa">FCFA</span><em style="display:block;color:var(--encre3);font-weight:500">vs un achat unique au prix du premier ordre</em></b></div>
+  </div>
+  <table><thead><tr><th>Valeur</th><th class="num">1<sup>er</sup> achat</th><th class="num">PRU actuel</th><th class="num">Effet</th><th class="num">Gain du lissage</th><th class="num">Dispersion</th></tr></thead><tbody>${rows}</tbody></table>
+  <p class="aide">On compare ton prix de revient à ce qu'il aurait été si tout avait été acheté d'un coup au prix du premier ordre. Un effet positif signifie que l'accumulation progressive a amélioré ton point d'entrée. La dispersion mesure l'écart entre tes prix d'exécution successifs sur la même ligne.</p>
+  <div class="note info" style="margin:12px 0 0">Renforcer sous son prix de revient améliore mécaniquement le PRU — cela ne dit rien de la qualité de la société. Croise cette carte avec la performance réelle de la ligne avant d'en tirer une règle.</div>`;
+}
+
+/* --- Effet de disposition --- */
+function blocDisposition(){
+  const e=effetDisposition();
+  if(e.pgr==null&&e.plr==null)return'<p class="vide">Pas encore assez de positions ouvertes et bouclées pour mesurer ce biais.</p>';
+  let verdict;
+  if(e.ecart==null)verdict='<div class="note info">Il manque soit des positions bouclées, soit des positions ouvertes pour comparer les deux propensions.</div>';
+  else if(e.ecart>0.2)verdict=`<div class="note ko"><strong>Effet de disposition marqué (+${(e.ecart*100).toFixed(0)} points).</strong> Tu soldes tes gagnantes bien plus volontiers que tes perdantes. C'est le réflexe le plus coûteux de l'investisseur particulier : il coupe les hausses et laisse courir les baisses.</div>`;
+  else if(e.ecart<-0.2)verdict=`<div class="note info"><strong>Biais inverse (${(e.ecart*100).toFixed(0)} points).</strong> Tu soldes plus facilement tes perdantes que tes gagnantes — discipline de coupe des pertes, ou capitulation selon les cas.</div>`;
+  else verdict='<div class="note ok"><strong>Pas de biais net.</strong> Tu traites gagnantes et perdantes avec à peu près la même main.</div>';
+  return `<div class="stats">
+    <div><span>Gains soldés / gains en portefeuille</span><b>${e.gr} / ${e.gl}<em style="display:block;color:var(--encre3);font-weight:500">propension à encaisser : ${e.pgr!=null?(e.pgr*100).toFixed(0)+" %":"—"}</em></b></div>
+    <div><span>Pertes soldées / pertes en portefeuille</span><b>${e.pr} / ${e.pl}<em style="display:block;color:var(--encre3);font-weight:500">propension à couper : ${e.plr!=null?(e.plr*100).toFixed(0)+" %":"—"}</em></b></div>
+    <div><span>Durée moyenne des gagnantes bouclées</span><b>${jrs(e.dureeG)}</b></div>
+    <div><span>Durée moyenne des perdantes bouclées</span><b>${jrs(e.dureeP)}</b></div>
+  </div>${verdict}
+  <p class="aide">Mesure d'Odean : on compare la part des lignes gagnantes que tu as soldées à la part des lignes perdantes que tu as soldées. Calcul fait au niveau de la position, pas de l'ordre — indicatif tant que le nombre de lignes bouclées reste faible.</p>`;
+}
+
+/* --- Durée de détention --- */
+function blocDuree(){
+  const a=ageMoyen();
+  const s=positionsSoldees(AUJ());
+  const dS=s.filter(o=>o.jours!=null).map(o=>o.jours);
+  const moyS=dS.length?dS.reduce((x,y)=>x+y,0)/dS.length:null;
+  const ks=Object.keys(a.parLigne).sort((x,y)=>a.parLigne[y]-a.parLigne[x]);
+  if(!ks.length&&moyS==null)return'<p class="vide">Aucune position à dater.</p>';
+  const rows=ks.map(k=>`<tr><td class="tick">${esc(k)}<span style="display:block;font-weight:400;font-size:11px;color:var(--encre3)">${esc(nomDe(k))}</span></td>
+    <td class="num">${jrs(a.parLigne[k])}</td></tr>`).join("");
+  return `<div class="stats">
+    <div class="fort"><span>Âge moyen du capital en portefeuille</span><b>${jrs(a.global)}<em style="display:block;color:var(--encre3);font-weight:500">pondéré par les montants investis</em></b></div>
+    <div><span>Durée moyenne des positions bouclées</span><b>${jrs(moyS)}<em style="display:block;color:var(--encre3);font-weight:500">${dS.length} aller-retour(s)</em></b></div>
+  </div>
+  ${rows?`<table><thead><tr><th>Valeur</th><th class="num">Ancienneté moyenne</th></tr></thead><tbody>${rows}</tbody></table>`:""}
+  <p class="aide">L'ancienneté est pondérée par le capital : un renforcement récent rajeunit la ligne. Elle situe ton horizon réel, celui de tes actes, pas celui que tu t'annonces.</p>`;
+}
+
+/* --- Trésorerie dormante --- */
+function blocCash(){
+  const t=tresorerie();
+  if(!t)return'<p class="vide">Historique trop court pour mesurer la trésorerie dormante.</p>';
+  return `<div class="stats">
+    <div><span>Espèces moyennes sur le compte</span><b>${fcfa(t.espMoy)}<span class="cfa">FCFA</span></b></div>
+    <div><span>Part moyenne non investie</span><b class="${t.part>25?"p":""}">${t.part!=null?t.part.toFixed(1)+" %":"—"}<em style="display:block;color:var(--encre3);font-weight:500">du compte total</em></b></div>
+    <div><span>Pic de liquidité</span><b>${fcfa(t.mx)}<span class="cfa">FCFA</span><em style="display:block;color:var(--encre3);font-weight:500">le ${dateFr(t.dMx)}</em></b></div>
+    <div><span>Creux de liquidité</span><b class="${t.mn<0?"p":""}">${fcfa(t.mn)}<span class="cfa">FCFA</span><em style="display:block;color:var(--encre3);font-weight:500">le ${dateFr(t.dMn)}</em></b></div>
+    ${t.manque!=null?`<div class="fort"><span>Manque à gagner estimé</span><b class="p">−${fcfa(Math.max(0,t.manque))}<span class="cfa">FCFA</span><em style="display:block;color:var(--encre3);font-weight:500">sur ${t.annees.toFixed(1)} an(s)</em></b></div>`:""}
+  </div>
+  ${t.part!=null&&t.part>25?'<div class="note ko" style="margin:16px 0 0"><strong>Plus d\'un quart de ton compte dort en espèces.</strong> Une réserve est saine ; au-delà, elle rogne la performance sans réduire le risque des lignes déjà détenues.</div>':'<div class="note ok" style="margin:16px 0 0">Ta poche de liquidités reste contenue.</div>'}
+  <p class="aide">Le manque à gagner applique à tes espèces moyennes le rendement annualisé de ton portefeuille. C'est une estimation : elle suppose que cet argent aurait rapporté autant que le reste, ce qui n'est pas garanti. Le creux de liquidité indique le moment où le compte a frôlé la rupture.</p>`;
+}
+
+/* --- Discipline d'épargne --- */
+function blocDiscipline(){
+  const d=discipline();
+  if(!d.score&&d.n<3)return'<p class="vide">Moins de trois apports enregistrés : la régularité ne se mesure pas encore.</p>';
+  const mois=Object.keys(d.parMois).sort();
+  const mx=Math.max(...mois.map(m=>d.parMois[m]));
+  const barres=mois.map(m=>`<div style="flex:1;min-width:6px;display:flex;flex-direction:column;justify-content:flex-end" title="${m} — ${fcfa(d.parMois[m])} FCFA">
+    <i style="display:block;background:var(--marque);border-radius:3px 3px 0 0;height:${Math.max(2,d.parMois[m]/mx*70).toFixed(0)}px;opacity:.85"></i></div>`).join("");
+  const verdict=d.cv==null?"":d.cv<0.4?["ok","versements très réguliers — un vrai plan d'épargne"]:d.cv<0.8?["info","régularité correcte, avec quelques trous"]:["ko","apports opportunistes : le rythme dépend de tes rentrées d'argent, pas d'un plan"];
+  return `<div class="stats">
+    <div><span>Apports enregistrés</span><b>${d.n}<em style="display:block;color:var(--encre3);font-weight:500">du ${dateFr(d.premier)} au ${dateFr(d.dernier)}</em></b></div>
+    <div><span>Intervalle moyen</span><b>${jrs(d.intervalleMoyen)}<em style="display:block;color:var(--encre3);font-weight:500">écart-type ${jrs(d.intervalleEcart)}</em></b></div>
+    <div><span>Apport moyen</span><b>${fcfa(d.montantMoyen)}<span class="cfa">FCFA</span><em style="display:block;color:var(--encre3);font-weight:500">écart-type ${fcfa(d.montantEcart)}</em></b></div>
+    <div class="fort"><span>Score de régularité</span><b class="${d.score>=60?"g":d.score>=30?"":"p"}">${d.score} / 100</b></div>
+  </div>
+  <div style="display:flex;align-items:flex-end;gap:2px;height:78px;margin:18px 0 6px">${barres}</div>
+  <div style="font-size:11px;color:var(--encre3);display:flex;justify-content:space-between"><span>${mois[0]}</span><span>${mois[mois.length-1]}</span></div>
+  ${verdict?`<div class="note ${verdict[0]}" style="margin:16px 0 0">${verdict[1]}</div>`:""}
+  <p class="aide">Le score part de la dispersion des intervalles entre versements : 100 signifie un rythme parfaitement régulier, 0 des apports totalement erratiques. Les barres montrent ce que tu as versé mois par mois.</p>`;
+}
+
+/* --- FIFO / LIFO --- */
+function blocMethodes(){
+  const e=etatA(AUJ());
+  let cmp=0;const ks=new Set();
+  for(const k in e.positions){if(e.positions[k].nbVentes){cmp+=e.positions[k].realise;ks.add(k)}}
+  if(!ks.size)return'<p class="vide">Aucune vente enregistrée : les trois méthodes donnent le même résultat, zéro.</p>';
+  const F=realiseParMethode("fifo"),L=realiseParMethode("lifo");
+  let tf=0,tl=0;
+  const rows=[...ks].map(k=>{
+    const c=e.positions[k].realise,f=(F[k]||{realise:0}).realise,l=(L[k]||{realise:0}).realise;
+    tf+=f;tl+=l;
+    return `<tr><td class="tick">${esc(k)}</td>
+      <td class="num ${cls(c)}">${signe(c)}</td>
+      <td class="num ${cls(f)}">${signe(f)}</td>
+      <td class="num ${cls(l)}">${signe(l)}</td></tr>`}).join("");
+  const best=Math.max(cmp,tf,tl),worst=Math.min(cmp,tf,tl);
+  const nom=v=>v===cmp?"coût moyen":v===tf?"FIFO":"LIFO";
+  return `<table><thead><tr><th>Valeur</th><th class="num">Coût moyen (réel)</th><th class="num">FIFO</th><th class="num">LIFO</th></tr></thead>
+  <tbody>${rows}</tbody>
+  <tfoot><tr style="font-weight:700"><td>Total réalisé</td><td class="num ${cls(cmp)}">${signe(cmp)}</td><td class="num ${cls(tf)}">${signe(tf)}</td><td class="num ${cls(tl)}">${signe(tl)}</td></tr></tfoot></table>
+  <div class="note info" style="margin:16px 0 0">Ta SGI applique le <strong>coût moyen pondéré</strong> : c'est la colonne de gauche, la seule qui compte pour tes relevés. En ${esc(nom(best))} tu aurais affiché ${fcfa(Math.abs(best-cmp))} FCFA de plus-value en plus, en ${esc(nom(worst))} ${fcfa(Math.abs(cmp-worst))} FCFA de moins. Écart maximal entre méthodes : <strong>${fcfa(best-worst)} FCFA</strong>.</div>
+  <p class="aide">Simulation comptable : les titres vendus sont réaffectés aux plus anciens lots (FIFO) ou aux plus récents (LIFO). Cela ne change ni ton argent ni ton portefeuille — seulement la répartition entre plus-value affichée et prix de revient restant. Utile si une fiscalité sur les cessions s'applique à ton compte.</p>`;
 }
 
 function vueRapports(){
@@ -2755,6 +3682,15 @@ function vueRapports(){
   if(topL&&topL.v/tot>0.25)alertes+=`<div class="note ko"><strong>${esc(topL.k)} pèse ${(topL.v/tot*100).toFixed(1)} % de tes titres</strong> — au-delà du seuil prudentiel courant de 25 % par ligne. Une seule mauvaise annonce sur cette valeur et c'est tout le portefeuille qui tangue.</div>`;
   if(topS&&topS.v/tot>0.5)alertes+=`<div class="note ko"><strong>Le secteur ${esc(topS.k)} concentre ${(topS.v/tot*100).toFixed(1)} %</strong> de ta valorisation. Tes lignes sont nombreuses mais exposées au même risque.</div>`;
   if(!alertes)alertes='<div class="note ok"><strong>Concentration raisonnable.</strong> Aucune ligne ne dépasse 25 % et aucun secteur ne domine.</div>';
+  const hL=hhiDe(l.map(o=>({k:o.k,v:o.v}))), hS=hhiDe(secl);
+  let hhiHtml="";
+  if(hL){const q=libHHI(hL.h),qs=hS?libHHI(hS.h):null;
+    hhiHtml=`<div class="stats" style="margin-bottom:14px">
+      <div><span>Indice HHI par ligne</span><b class="${q.t==="ko"?"p":q.t==="ok"?"g":""}">${Math.round(hL.h)}<em style="display:block;color:var(--encre3);font-weight:500">${q.m}</em></b></div>
+      <div><span>Équivalent lignes réelles</span><b>${hL.equiv.toFixed(1)}<em style="display:block;color:var(--encre3);font-weight:500">pour ${l.length} ligne(s) détenue(s)</em></b></div>
+      ${hS?`<div><span>Indice HHI par secteur</span><b class="${qs.t==="ko"?"p":qs.t==="ok"?"g":""}">${Math.round(hS.h)}<em style="display:block;color:var(--encre3);font-weight:500">${qs.m}</em></b></div>`:""}
+    </div>
+    <p class="aide">L'indice de Herfindahl additionne les carrés des poids : il monte dès qu'une ligne écrase les autres. En dessous de 1500 le portefeuille est diversifié, au-delà de 2500 il est concentré. L'équivalent lignes réelles traduit l'indice en nombre de positions de poids égal — s'il est très inférieur au nombre de lignes détenues, ta diversification est plus apparente que réelle.</p>`}
 
   /* ---- palmarès ---- */
   const rangs=l.map(o=>({k:o.k,g:o.pv+o.p.realise+o.p.dividendes,cout:o.p.cout})).sort((a,b)=>b.g-a.g);
@@ -2790,17 +3726,51 @@ function vueRapports(){
       ${nC<nOrdres?`<div class="note info" style="margin:16px 0 0">${nOrdres-nC} ordre(s) de ton journal n'ont pas encore de courtage isolé — chez la SBIF, importe le relevé titre pour les rapprocher.</div>`:""}
       <div class="note info" style="margin:16px 0 0">Ce courtage est <strong>déjà dans tes prix de revient</strong> : il est fondu dans le montant de chaque ordre. Il ne s'ajoute pas aux frais ci-dessus, il était simplement invisible. Frais explicites + courtage = <strong>${fcfa(totFrais+court)} FCFA</strong> depuis l'origine.</div>`
     :`<p class="vide">Le courtage se révèle par confrontation : chez la SBIF, importe le <strong>relevé titre</strong> (prix brut de chaque ordre) ; chez Coris, il est déjà déduit du relevé chronologique.</p>`;
+  const menu=[["r-cout","Coûts"],["r-div","Dividendes"],["r-perf","Performance"],
+    ["r-risq","Risque"],["r-comp","Comportement"],["r-flux","Flux"],["r-lex","Lexique"]];
   el.innerHTML=`
-    <div class="carte" style="margin-top:0"><h2>Courtage <span class="sous">le frais invisible</span></h2>${courtHtml}</div>
-    <div class="carte"><h2>Ce que coûtent les frais <span class="sous">depuis l'origine</span></h2>${fraisHtml}</div>
-    <div class="carte"><h2>Revenus passifs <span class="sous">tes dividendes, année par année</span></h2>${barresDivs()}</div>
-    <div class="carte"><h2>Rendement par valeur <span class="sous">${divs.length?divs.length+" valeur"+(divs.length>1?"s":""):""}</span></h2>${divHtml}</div>
-    <div class="carte"><h2>Positions bouclées <span class="sous">tes allers-retours terminés</span></h2>${blocSoldees()}</div>
-    <div class="duo">
-      <div class="carte" style="margin:0"><h2>Concentration</h2>${alertes}${palHtml}</div>
-      <div class="carte" style="margin:0"><h2>Par secteur</h2>${secHtml}</div>
+    <div class="carte" style="margin-top:0;padding-top:14px;padding-bottom:14px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px">${menu.map(([id,lib])=>
+        `<a href="#${id}" style="text-decoration:none;font-size:12px;font-weight:650;padding:6px 12px;border-radius:999px;background:var(--carte2);color:var(--encre2)">${lib}</a>`).join("")}</div>
     </div>
-    <div class="carte"><h2>Flux par année</h2>${fluxHtml}</div>`;
+
+    <h3 id="r-cout" class="rubr">Coûts et frottements</h3>
+    <div class="carte" style="margin-top:0"><h2>Courtage <span class="sous">le frais invisible</span></h2><div class="expl-slot" data-expl="courtage"></div>${courtHtml}</div>
+    <div class="carte"><h2>Ce que coûtent les frais <span class="sous">depuis l'origine</span></h2><div class="expl-slot" data-expl="frais"></div>${fraisHtml}</div>
+    <div class="carte"><h2>Seuil de rentabilité d'un ordre <span class="sous">à partir de quel montant ça vaut le coup</span></h2><div class="expl-slot" data-expl="seuil"></div>${blocSeuil()}</div>
+
+    <h3 id="r-div" class="rubr">Dividendes</h3>
+    <div class="carte" style="margin-top:0"><h2>Revenus passifs <span class="sous">tes dividendes, année par année</span></h2><div class="expl-slot" data-expl="revenus"></div>${barresDivs()}</div>
+    <div class="carte"><h2>Rendement par valeur <span class="sous">${divs.length?divs.length+" valeur"+(divs.length>1?"s":""):""}</span></h2><div class="expl-slot" data-expl="rendementvaleur"></div>${divHtml}</div>
+    <div class="carte"><h2>Coupon par titre reconstitué <span class="sous">contrôle des détachements</span></h2><div class="expl-slot" data-expl="dpa"></div>${blocDPA()}</div>
+    <div class="carte"><h2>Vitesse de réemploi <span class="sous">le temps que ton argent reste inactif</span></h2><div class="expl-slot" data-expl="reemploi"></div>${blocReemploi()}</div>
+
+    <h3 id="r-perf" class="rubr">Performance</h3>
+    <div class="carte" style="margin-top:0"><h2>Attribution de performance <span class="sous">qui a fait ton résultat</span></h2><div class="expl-slot" data-expl="attribution"></div>${blocAttribution()}</div>
+    <div class="carte"><h2>Positions bouclées <span class="sous">tes allers-retours terminés</span></h2><div class="expl-slot" data-expl="soldees"></div>${blocSoldees()}</div>
+    <div class="carte"><h2>Coût moyen, FIFO ou LIFO <span class="sous">simulation comptable</span></h2><div class="expl-slot" data-expl="methodes"></div>${blocMethodes()}</div>
+
+    <h3 id="r-risq" class="rubr">Risque et structure</h3>
+    <div class="duo">
+      <div class="carte" style="margin:0"><h2>Concentration</h2><div class="expl-slot" data-expl="concentration"></div>${hhiHtml}${alertes}${palHtml}</div>
+      <div class="carte" style="margin:0"><h2>Par secteur</h2><div class="expl-slot" data-expl="secteurs"></div>${secHtml}</div>
+    </div>
+    <div class="carte"><h2>Rotation du portefeuille <span class="sous">cœur stratégique et satellites</span></h2><div class="expl-slot" data-expl="rotationc"></div>${blocRotation()}</div>
+    <div class="carte"><h2>Durée de détention <span class="sous">ton horizon réel</span></h2><div class="expl-slot" data-expl="duree"></div>${blocDuree()}</div>
+    <div class="carte"><h2>Trésorerie dormante <span class="sous">le coût de l'argent qui attend</span></h2><div class="expl-slot" data-expl="cash"></div>${blocCash()}</div>
+
+    <h3 id="r-comp" class="rubr">Comportement</h3>
+    <div class="carte" style="margin-top:0"><h2>Efficacité du lissage <span class="sous">tes renforcements successifs</span></h2><div class="expl-slot" data-expl="lissagec"></div>${blocLissage()}</div>
+    <div class="carte"><h2>Effet de disposition <span class="sous">coupes-tu tes gains trop tôt ?</span></h2><div class="expl-slot" data-expl="dispositionc"></div>${blocDisposition()}</div>
+    <div class="carte"><h2>Discipline d'épargne <span class="sous">la régularité de tes apports</span></h2><div class="expl-slot" data-expl="disciplinec"></div>${blocDiscipline()}</div>
+
+    <h3 id="r-flux" class="rubr">Flux</h3>
+    <div class="carte" style="margin-top:0"><h2>Flux par année</h2><div class="expl-slot" data-expl="flux"></div>${fluxHtml}</div>
+
+    <h3 id="r-lex" class="rubr">Lexique</h3>
+    <div class="carte" style="margin-top:0"><h2>Tous les mots de l'application <span class="sous">expliqués simplement</span></h2>
+      <p class="chapo">Aucun de ces termes n'est réservé aux financiers. Partout dans l'application, les mots <span class="lex" data-lex="pru" role="button" tabindex="0">soulignés en pointillé</span> s'ouvrent d'un clic sur leur définition — les voici tous rassemblés.</p>
+      ${blocLexique()}</div>`;
   brancherSoldees(el);
 }
 /* Déplier / replier le détail des ordres d'une position soldée. */
@@ -2916,7 +3886,7 @@ function vueObjectifs(){
 
   el.innerHTML=`
   <div class="carte" style="margin-top:0">
-    <h2>Allocation cible <span class="sous">${l.length} lignes</span></h2>
+    <h2>Allocation cible <span class="sous">${l.length} lignes</span></h2><div class="expl-slot" data-expl="cibles"></div>
     <p class="chapo">Fixe le poids que tu veux pour chaque valeur. Le carnet calcule l'écart et le geste exact pour y revenir — en francs et en titres.</p>
     ${jauge}
     <div class="rangee" style="margin-top:14px">
@@ -2933,7 +3903,7 @@ function vueObjectifs(){
       :"Laisse à zéro pour voir le rééquilibrage complet (achats <em>et</em> ventes). Saisis un montant pour voir comment le placer <strong>sans rien vendre</strong> — souvent préférable : vendre coûte du courtage."}</p>
   </div>
   <div class="carte">
-    <h2>Projection <span class="sous">à ${HORIZON} an${HORIZON>1?"s":""}</span></h2>
+    <h2>Projection <span class="sous">à ${HORIZON} an${HORIZON>1?"s":""}</span></h2><div class="expl-slot" data-expl="projection"></div>
     <p class="chapo">Ce que devient ton patrimoine si tu continues au même rythme. Rien n'est garanti — c'est une arithmétique, pas une prévision.</p>
     <div class="champs" style="max-width:640px">
       <div><label for="oMens">Versement mensuel</label><input type="number" id="oMens" min="0" step="10000" value="${MENS}"></div>
@@ -3053,6 +4023,7 @@ function vueCours(){
     if(!C().cours[k].length)delete C().cours[k];sauver();tout()}));
 }
 function vueAlias(){
+  rendreSgiReglages();
   const ns=Object.keys(S.reglages.alias).sort();
   document.getElementById("tbAlias").innerHTML=ns.map(n=>`<tr><td>${esc(n)}</td>
     <td><input class="alias" data-ral="${esc(n)}" value="${esc(S.reglages.alias[n])}"></td>
@@ -3157,7 +4128,7 @@ function tickers(){
 let ACTIVE="apercu", SALE={};
 const VUES_F={apercu:()=>vueApercu(),analyse:()=>vueAnalyse(),rapports:()=>vueRapports(),
   objectifs:()=>vueObjectifs(),transactions:()=>vueJournal(),controle:()=>vueControle(),
-  cours:()=>vueCours(),reglages:()=>vueAlias(),importer:()=>{}};
+  cours:()=>vueCours(),reglages:()=>vueAlias(),importer:()=>vueImport()};
 function rendreVue(v){if(SALE[v]!==false&&VUES_F[v]){VUES_F[v]();SALE[v]=false}}
 function tout(){
   document.body.classList.toggle("sim",S.actif==="virtuel");
@@ -3181,11 +4152,27 @@ function tout(){
   rendreVue(ACTIVE);
   const n=nbEcarts(),b=document.getElementById("badge");b.hidden=!n;b.textContent=n;
 }
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".lex");
+  if(t){ouvrirLex(t.dataset.lex);return}
+  if(e.target.id==="lexOk"||e.target.id==="voileL")fermerLex();
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"&&!document.getElementById("lexBoite").hidden)fermerLex();
+  if((e.key==="Enter"||e.key===" ")&&e.target.classList&&e.target.classList.contains("lex")){
+    e.preventDefault();ouvrirLex(e.target.dataset.lex)}
+});
+/* Les blocs « Comprendre » se remplissent tout seuls, où qu'ils apparaissent. */
+try{
+  const obs=new MutationObserver(()=>{clearTimeout(window._tExpl);window._tExpl=setTimeout(()=>remplirExpl(),30)});
+  obs.observe(document.body,{childList:true,subtree:true});
+}catch(e){}
+
 function onglet(v){
   ACTIVE=v;
   document.querySelectorAll(".nav button").forEach(b=>b.setAttribute("aria-selected",b.dataset.vue===v));
   document.querySelectorAll("main section").forEach(s=>s.hidden=(s.id!=="vue-"+v));
-  rendreVue(v); majActe();
+  rendreVue(v); majActe(); remplirExpl();
   document.querySelector(".contenu").scrollIntoView({block:"start"});
 }
 
